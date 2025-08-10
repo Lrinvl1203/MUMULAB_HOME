@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MUMULAB v2 - Documents</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      body { background: var(--bg-primary); color: var(--text-primary); user-select: text; overflow: auto; }
+      .container { max-width: 1080px; margin: 72px auto 64px; padding: 0 24px; }
+      .page-title { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 8px; }
+      .page-subtitle { color: var(--text-secondary); margin-bottom: 24px; }
+      .card { background: var(--bg-secondary); border: 1px solid var(--border-primary); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); overflow: hidden; }
+      .card + .card { margin-top: 24px; }
+      .card-header { display:flex; align-items:center; justify-content:space-between; padding: 16px 20px; border-bottom: 1px solid var(--border-primary); background: var(--bg-tertiary); }
+      .card-title { font-size: 16px; font-weight: 600; }
+      .card-actions a { color: var(--text-secondary); text-decoration: none; font-size: 13px; }
+      .card-actions a:hover { color: var(--text-primary); }
+      .card-body { padding: 20px; }
+      .doc-list { display:grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+      .doc-item { display:flex; justify-content:space-between; align-items:center; padding: 12px 14px; border: 1px solid var(--border-primary); border-radius: var(--radius-md); background: var(--bg-elevated); }
+      .doc-item a { color: var(--text-primary); text-decoration: none; }
+      .doc-item a:hover { color: var(--accent-hover); }
+      .md-content { line-height: 1.7; color: var(--text-primary); }
+      .md-content h1, .md-content h2, .md-content h3 { margin: 16px 0 8px; }
+      .md-content p, .md-content ul, .md-content ol, .md-content pre, .md-content blockquote { margin: 8px 0; }
+      .md-content code, .md-content pre { background: var(--bg-tertiary); border: 1px solid var(--border-primary); border-radius: 8px; }
+      .md-content pre { padding: 12px; overflow:auto; }
+      .md-content table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+      .md-content th, .md-content td { border: 1px solid var(--border-primary); padding: 8px 10px; }
+      .muted { color: var(--text-tertiary); font-size: 13px; }
+      .header { position: fixed; top:0; left:0; right:0; height: 56px; background: var(--bg-primary); border-bottom: 1px solid var(--border-primary); z-index: 10; display:flex; align-items:center; }
+      .header-inner { display:flex; align-items:center; justify-content:space-between; gap: 12px; height:100%; padding: 0 16px; }
+      .brand { font-weight: 600; letter-spacing: -0.01em; }
+      .links { display:flex; gap: 12px; }
+      .links a { color: var(--text-secondary); text-decoration:none; font-size: 13px; }
+      .links a:hover { color: var(--text-primary); }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  </head>
+  <body class="theme-dark">
+    <header class="navbar">
+      <div class="navbar-inner">
+        <div class="brand"><a class="brand-link" href="#home" style="color:inherit; text-decoration:none;">MUMULAB</a></div>
+        <nav class="main-nav" aria-label="Primary">
+          <ul class="nav">
+            <li class="nav-item">
+              <a class="nav-link" href="#ideation">아이디어 & 검증</a>
+              <div class="dropdown" role="menu">
+                <a href="ideation/idea-capture/">아이디어 수집</a>
+                <a href="ideation/market-research/">시장 조사</a>
+                <a href="ideation/competitor-analysis/">경쟁사 분석</a>
+                <a href="ideation/validation/">아이디어 검증</a>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#planning">계획 & 전략</a>
+              <div class="dropdown" role="menu">
+                <a href="planning/business-model/">비즈니스 모델</a>
+                <a href="planning/financial-planning/">재무 계획</a>
+                <a href="planning/resource-planning/">리소스 계획</a>
+                <a href="planning/timeline/">타임라인</a>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#development">개발 & 구축</a>
+              <div class="dropdown" role="menu">
+                <a href="development/product-roadmap/">제품 로드맵</a>
+                <a href="development/mvp-planning/">MVP 계획</a>
+                <a href="development/development-tracking/">개발 추적</a>
+                <a href="development/testing/">테스팅</a>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#launch">출시 & 성장</a>
+              <div class="dropdown" role="menu">
+                <a href="launch/go-to-market/">GTM 전략</a>
+                <a href="launch/marketing-plan/">마케팅 계획</a>
+                <a href="launch/analytics/">분석 대시보드</a>
+                <a href="launch/growth-tracking/">성장 추적</a>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#operations">운영 & 확장</a>
+              <div class="dropdown" role="menu">
+                <a href="operations/process-docs/">프로세스 문서화</a>
+                <a href="operations/team-management/">팀 관리</a>
+                <a href="operations/performance/">성과 지표</a>
+                <a href="operations/scaling/">확장 전략</a>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#apps">APP</a>
+            </li>
+          </ul>
+        </nav>
+        
+      </div>
+    </header>
+
+    <main class="container">
+      <section id="home" class="card" style="margin-bottom: 24px; padding: 28px;">
+        <h1 class="hero-title">MUMULAB — End-to-End Business Builder</h1>
+        <p class="hero-desc">아이디어에서 확장까지 AI를 활용한 Personal Business 모든 단계의 워크플로우를 빠르게 설계하고 실행하세요.</p>
+        <div class="hero-cta" style="margin-bottom: 12px;">
+          <a class="btn btn-primary" href="#ideation">시작하기</a>
+          <a class="btn btn-secondary" href="#markdown">문서 보기</a>
+        </div>
+        <div style="display:flex; align-items:center;">
+          <img src="reference/Iverse_v2.svg" alt="iVerse" style="height:auto; width:auto; max-width:100%; opacity:0.95;" />
+        </div>
+      </section>
+
+       <section id="apps" class="apps-card" hidden>
+         <div id="apps-wall" class="apps-wall"></div>
+      </section>
+    </main>
+    
+    <script>
+      // 정렬된 앱 아이콘 렌더
+      const APPS = [
+        { id: 'notes', label: 'Notes' },
+        { id: 'tasks', label: 'Tasks' },
+        { id: 'auto-blog', label: '블로그 글 작성 자동화', iconPath: 'icons/블로그 글 자동화.ico', href: 'apps/blog-writer.html' },
+        { id: 'kanban', label: 'Kanban Board' },
+        { id: 'calendar', label: 'Calendar' },
+        { id: 'analytics', label: 'Analytics' },
+      ];
+
+      function createItem(app) {
+        const wrap = document.createElement('a');
+        wrap.className = 'app-item';
+        wrap.href = app.href || `#apps/${app.id}`;
+        wrap.style.textDecoration = 'none';
+        const icon = document.createElement('div');
+        icon.className = 'app-icon';
+        if (app.iconPath) {
+          icon.innerHTML = `<img src="${app.iconPath}" alt="${app.label}" style="width:44px;height:44px;border-radius:10px;" />`;
+        } else {
+          icon.innerHTML = `<svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#a1a1aa" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/></svg>`;
+        }
+        icon.title = app.label;
+        const label = document.createElement('div');
+        label.className = 'app-label';
+        label.textContent = app.label;
+        wrap.appendChild(icon);
+        wrap.appendChild(label);
+        return wrap;
+      }
+
+      function showAppsIfHash() {
+        const section = document.getElementById('apps');
+        const wall = document.getElementById('apps-wall');
+        if (!section || !wall) return;
+        const shouldShow = window.location.hash === '#apps' || window.location.hash.startsWith('#apps/');
+        section.hidden = !shouldShow;
+        if (shouldShow && wall.childElementCount === 0) {
+          APPS.forEach(app => wall.appendChild(createItem(app)));
+        }
+      }
+
+      window.addEventListener('hashchange', showAppsIfHash);
+      document.addEventListener('DOMContentLoaded', showAppsIfHash);
+    </script>
+    
+  </body>
+</html>
