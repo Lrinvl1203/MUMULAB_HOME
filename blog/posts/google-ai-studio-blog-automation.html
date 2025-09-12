@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Google AI Studio로 블로그 자동화 만들기 - MUMULAB Blog</title>
+    <link rel="stylesheet" href="../../style.css" />
+    <style>
+      body { background: var(--bg-primary); color: var(--text-primary); user-select: text; overflow: auto; }
+      .container { max-width: 800px; margin: 72px auto 64px; padding: 0 24px; }
+      
+      .post-header {
+        margin-bottom: 32px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--border-primary);
+      }
+      
+      .post-meta { 
+        display: flex; 
+        gap: 12px; 
+        margin-bottom: 16px; 
+        font-size: 14px; 
+        color: var(--text-tertiary);
+      }
+      .post-category { 
+        background: var(--accent-primary); 
+        color: white; 
+        padding: 4px 8px; 
+        border-radius: var(--radius-sm); 
+        font-size: 12px;
+        font-weight: 500;
+      }
+      
+      .post-title { 
+        font-size: 32px; 
+        font-weight: 700; 
+        line-height: 1.2;
+        margin-bottom: 16px; 
+        color: var(--text-primary);
+      }
+      
+      .post-summary {
+        font-size: 18px;
+        color: var(--text-secondary);
+        line-height: 1.6;
+      }
+
+      .post-content {
+        line-height: 1.7;
+        color: var(--text-primary);
+      }
+      
+      .post-content h1, .post-content h2, .post-content h3, 
+      .post-content h4, .post-content h5, .post-content h6 { 
+        margin: 32px 0 16px; 
+        font-weight: 600;
+      }
+      .post-content h1 { font-size: 28px; }
+      .post-content h2 { font-size: 24px; }
+      .post-content h3 { font-size: 20px; }
+      
+      .post-content p { margin: 16px 0; }
+      .post-content ul, .post-content ol { 
+        margin: 16px 0; 
+        padding-left: 24px; 
+      }
+      .post-content li { margin: 8px 0; }
+      
+      .post-content pre { 
+        background: var(--bg-tertiary); 
+        border: 1px solid var(--border-primary); 
+        border-radius: 8px; 
+        padding: 16px; 
+        overflow: auto; 
+        margin: 16px 0;
+        font-size: 14px;
+      }
+      
+      .post-content code { 
+        background: var(--bg-tertiary); 
+        border: 1px solid var(--border-primary); 
+        border-radius: 4px; 
+        padding: 2px 4px;
+        font-size: 14px;
+      }
+      
+      .post-content pre code {
+        background: none;
+        border: none;
+        padding: 0;
+      }
+
+      .post-content blockquote {
+        border-left: 4px solid var(--accent-primary);
+        padding-left: 16px;
+        margin: 16px 0;
+        color: var(--text-secondary);
+        font-style: italic;
+      }
+
+      .note-box {
+        background: var(--bg-tertiary);
+        border-left: 4px solid var(--accent-primary);
+        padding: 16px;
+        margin: 16px 0;
+        border-radius: 0 8px 8px 0;
+      }
+
+      .post-navigation {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 48px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border-primary);
+      }
+      
+      .nav-link {
+        color: var(--accent-primary);
+        text-decoration: none;
+        padding: 12px 16px;
+        border: 1px solid var(--border-primary);
+        border-radius: var(--radius-md);
+        background: var(--bg-secondary);
+        transition: all 0.2s ease;
+      }
+      .nav-link:hover {
+        background: var(--accent-primary);
+        color: white;
+        border-color: var(--accent-primary);
+      }
+
+      .header { position: fixed; top:0; left:0; right:0; height: 56px; background: var(--bg-primary); border-bottom: 1px solid var(--border-primary); z-index: 10; display:flex; align-items:center; }
+      .header-inner { display:flex; align-items:center; justify-content:space-between; gap: 12px; height:100%; padding: 0 16px; max-width: 1200px; margin: 0 auto; width: 100%; }
+      .brand { font-weight: 600; letter-spacing: -0.01em; }
+      .brand a { color: var(--text-primary); text-decoration: none; }
+      .nav-links { display:flex; gap: 20px; }
+      .nav-links a { color: var(--text-secondary); text-decoration:none; font-size: 14px; }
+      .nav-links a:hover { color: var(--text-primary); }
+    </style>
+  </head>
+  <body class="theme-dark">
+    <header class="header">
+      <div class="header-inner">
+        <div class="brand"><a href="../../app.html">MUMULAB</a></div>
+        <nav class="nav-links">
+          <a href="../../app.html">홈</a>
+          <a href="../">블로그</a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container">
+      <article>
+        <div class="post-header">
+          <div class="post-meta">
+            <span class="post-category">기술</span>
+            <span>2024-01-16</span>
+          </div>
+          <h1 class="post-title">Google AI Studio로 블로그 자동화 만들기</h1>
+          <div class="post-summary">Google AI Studio와 Gemini를 활용해 무료로 블로그 글 자동화 시스템을 구축하는 방법을 알아봅니다.</div>
+        </div>
+        
+        <div class="post-content">
+          <div class="note-box">
+            <p><strong>💡 팁:</strong> "▶" 모양 버튼을 누르시면 해당 내용의 상세 내용이 나옵니다.</p>
+            <p>전체 토글 "▶"을 펼치거나 닫으려면 <code>Ctrl + Alt + T</code>를 누르세요</p>
+          </div>
+
+          <h2>매일 새로 생기는 IT 기술을 배워야 한다?</h2>
+          
+          <h3>기술을 자꾸 배우려 하지마라… 결국 다음 기술이 금방 나옴</h3>
+          <p>해당 기술이 새롭게 개발되는데 시간이 오래걸리면 몰라도 AI는 다음주면 다음 기술이 나옵니다.</p>
+
+          <h3>기술이 아닌 기획을 배워야함</h3>
+          <p>단순히 기술을 익히는 것보다는 <strong>어떻게 활용할 것인가</strong>에 대한 기획 능력이 더 중요합니다.</p>
+
+          <h2>현재 판매하는 블로그 자동화 프로그램?? 대략 50만원부터 시작</h2>
+          <p>시중에서 판매되는 블로그 자동화 도구들은 상당히 비싸지만, 우리는 무료 도구를 활용해서 똑같은 기능을 만들 수 있습니다.</p>
+
+          <h2>목표</h2>
+          
+          <h3>블로그 글 자동화 구현</h3>
+          <p><strong>사용할 도구 (전부 무료)</strong></p>
+          <ol>
+            <li>Google AI Studio</li>
+            <li>Google Gemini</li>
+          </ol>
+
+          <h3>준비물</h3>
+          <ul>
+            <li>Google 계정</li>
+          </ul>
+
+          <h2>워크플로우 & 프롬프트</h2>
+
+          <h3>워크플로우</h3>
+          <ol>
+            <li>구글에서 "Google AI Studio" 검색하여 진입 후 로그인</li>
+            <li>좌측 "Build" 버튼 클릭</li>
+            <li>Build 창에 아래 프롬프트 입력</li>
+          </ol>
+
+          <h3>프롬프트</h3>
+
+          <h4>Base 프롬프트</h4>
+          <p><em>아무 것도 없는 상태에서 뼈대를 올리기 위한 가장 초기의 Prompt</em></p>
+
+          <pre><code>블로그 글을 자동으로 써주는 AI 앱을 만들어줘.
+1. 앱의 구조는 카테고리, 주제, 블로그 글 생성 버튼이고, 최종적으로 글 생성 버튼을 누르면 해당 선택에 맞게 글을 작성해줘
+2. 카테고리와 주제는 SEO에 최적화하여 ai를 통하여 추천받고 거기에서 선택할 수 있게 해줘. 이후에 사용자가 수정도 가능하도록 열어놔
+3. 카테고리와 주제가 선택되면 글 생성을 실행하면 그에 알맞은 글을 생성해줘
+3.1. 생성하는 글의 구조는 기승전결을 포함하여, 독자에게 친근하고 접근하기 쉬운 언어로, AI 티가 전혀 안나게 해줘.</code></pre>
+
+          <h4>Core 프롬프트</h4>
+          <p><em>기본 글 생성을 위한 Prompt 및 구조 - 기본 기승전결 등이 있는 일반 블로그 글 제시</em></p>
+
+          <pre><code>1. 목표 및 목적
+블로그 글 작성 GPT는 고품질의 정보성 글을 작성하는 것을 목표로 합니다. 글은 독자에게 가치를 제공하고 독자의 관심을 끌 수 있는 내용으로 작성해야 합니다. 글의 목적은 교육적, 정보적, 혹은 영감을 주는 콘텐츠를 제공하는 것입니다.
+
+2. 글의 톤과 스타일
+톤:
+- 독자에게 친근하고, 접근하기 쉬운 언어를 사용해야 합니다.
+- 글의 목적에 따라 다르게 조정할 수 있으나, 대체로 긍정적이고 명확하며 실용적인 톤을 유지합니다.
+- 공식적이지 않으며, 대화하는 듯한 자연스러운 톤을 지향합니다.
+
+스타일:
+- 간결하고 명료한 문장을 사용합니다. 불필요하게 긴 문장은 피하고, 주제에 대한 핵심 정보를 빠르게 전달합니다.
+- 목차, 소제목, 리스트 등을 사용하여 글을 읽기 쉽게 구성합니다.
+- 적절한 예시나 실제 사례를 들어 독자가 쉽게 이해하고 공감할 수 있도록 합니다.
+- 정확한 정보를 제공하며, 잘못된 정보나 근거 없는 주장을 피합니다.
+
+3. 대상 독자
+주 독자층을 직장인, 학생, 주부, 또는 취미와 자기 계발에 관심이 있는 사람들로 설정합니다.
+초보자부터 고급자까지 다양한 독자가 있을 수 있으므로, 글이 모두에게 유용하고 쉽게 접근 가능하도록 작성해야 합니다.
+
+4. 글의 구조
+제목:
+- 제목은 주제를 간결하고 매력적으로 요약합니다.
+- 독자의 호기심을 자극하는 방식으로 작성합니다.
+- 검색어 최적화(SEO)를 고려하여 제목을 작성합니다.
+
+서론:
+- 주제에 대한 간단한 소개로 독자의 관심을 끌도록 작성합니다.
+- 독자가 글을 읽을 이유를 제공하며, 글의 핵심 포인트를 짧게 설명합니다.
+
+본론:
+- 세부 내용을 체계적으로 전개합니다.
+- 하위 제목과 리스트를 활용하여 정보가 구체적이고 명확하게 전달되도록 합니다.
+- 각 섹션은 짧고 핵심적인 정보를 제공하며, 쉽게 읽을 수 있도록 배치합니다.
+
+결론:
+- 글의 핵심 요약 및 독자가 취할 수 있는 행동을 유도합니다.
+- 간단한 팁이나 독자가 할 수 있는 다음 단계를 제시하여 글의 실용성을 높입니다.
+
+콜 투 액션 (CTA):
+- 독자에게 댓글을 달거나, 추가 자료를 요청하거나, 구독을 유도하는 문구를 넣습니다.</code></pre>
+
+          <h3>추가할 기능</h3>
+          <ul>
+            <li><strong>글 작성 지침 입력하여, 글 퀄리티 높이기</strong></li>
+            <li><strong>SNS 별 게시물 만들기</strong> - 인스타, 스레드, 유튜브 대본 만들기</li>
+            <li><strong>적절한 이미지 생성하기</strong> - 글의 성격에 맞는 이미지 생성하기</li>
+          </ul>
+
+          <h2>노션 공유받는 방법</h2>
+          <ol>
+            <li><strong>[영상 업로드 후 30일까지만]</strong> 구독, 좋아요, 댓글 인증 후 lrinvl1203@gmail.com으로 메일 보내기</li>
+            <li><strong>[영상 업로드 후 30일 이후 @ 990원]</strong> <a href="https://litt.ly/mumulab1203">https://litt.ly/mumulab1203</a>에서 해당 영상 노션 구매</li>
+            <li><strong>[무무랩 전체 프로젝트 노션 공유 @ 월 9900원]</strong> - 작업 방법, 프롬프트, 프로그램 등</li>
+          </ol>
+
+          <h2>Next Version (Coming Soon)</h2>
+
+          <h3>저품질 탈출</h3>
+          <ul>
+            <li><strong>Fine Tuning 기능</strong>
+              <ul>
+                <li>사용자가 조절하는 Prompt 및 컨텐츠 생성 온도 변경 (전문가스럽게, 친숙하게, 따뜻하게 등)</li>
+                <li>사용자의 입맛에 맞게 출력된 Prompt 값 변경 (상세 Prompt 변경, 글 구조 변경 등)</li>
+              </ul>
+            </li>
+            <li><strong>iVerse 구현</strong>
+              <ul>
+                <li>내가 쓴 글과 동일한 구조, 어투, 유머를 섞어서 사용할 수 있는 기능</li>
+                <li>나의 블로그 포스트를 예시로 3가지 업로드하면 (최소 각 2000자) 그를 인식하고 복제하여 똑같이 구현</li>
+              </ul>
+            </li>
+          </ul>
+
+          <h3>향후 기능</h3>
+          <ul>
+            <li><strong>이미지 생성</strong></li>
+            <li><strong>자동 포스팅</strong></li>
+          </ul>
+
+          <h2>마무리</h2>
+          <p>Google AI Studio를 활용하면 비싼 유료 도구 없이도 충분히 훌륭한 블로그 자동화 시스템을 만들 수 있습니다. 기술을 배우는 것보다 <strong>어떻게 활용할 것인가</strong>에 대한 기획 능력을 기르는 것이 더 중요한 시대입니다.</p>
+
+          <p>여러분도 이 가이드를 따라해서 나만의 블로그 자동화 시스템을 구축해보세요!</p>
+        </div>
+      </article>
+
+      <div class="post-navigation">
+        <a href="../" class="nav-link">← 블로그 목록으로</a>
+      </div>
+    </div>
+  </body>
+</html>
