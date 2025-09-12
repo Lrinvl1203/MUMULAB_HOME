@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>프로젝트 관리자 - MUMULAB Tools</title>
+    <link rel="stylesheet" href="../style.css" />
+    <style>
+      body { 
+        background: var(--bg-primary); 
+        color: var(--text-primary); 
+        user-select: text; 
+        overflow: auto; 
+      }
+      .container { 
+        max-width: 1080px; 
+        margin: 72px auto 64px; 
+        padding: 0 24px; 
+      }
+      
+      .tool-header {
+        text-align: center;
+        padding: 48px 0;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-primary);
+        border-radius: var(--radius-lg);
+        margin-bottom: 32px;
+      }
+      
+      .tool-icon {
+        font-size: 64px;
+        margin-bottom: 16px;
+      }
+      
+      .tool-title {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      
+      .tool-description {
+        font-size: 16px;
+        color: var(--text-secondary);
+        margin-bottom: 24px;
+      }
+      
+      .demo-section {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-primary);
+        border-radius: var(--radius-lg);
+        padding: 32px;
+        margin-bottom: 32px;
+      }
+      
+      .demo-title {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+      
+      .coming-soon {
+        text-align: center;
+        padding: 64px 0;
+        color: var(--text-secondary);
+        font-size: 18px;
+      }
+
+      .header { 
+        position: fixed; 
+        top: 0; 
+        left: 0; 
+        right: 0; 
+        height: 56px; 
+        background: var(--bg-primary); 
+        border-bottom: 1px solid var(--border-primary); 
+        z-index: 10; 
+        display: flex; 
+        align-items: center; 
+      }
+      
+      .header-inner { 
+        display: flex; 
+        align-items: center; 
+        justify-content: space-between; 
+        gap: 12px; 
+        height: 100%; 
+        padding: 0 16px; 
+        max-width: 1200px; 
+        margin: 0 auto; 
+        width: 100%; 
+      }
+      
+      .brand { 
+        font-weight: 600; 
+        letter-spacing: -0.01em; 
+        font-size: 18px;
+      }
+      
+      .brand a { 
+        color: var(--text-primary); 
+        text-decoration: none; 
+      }
+      
+      .nav-links { 
+        display: flex; 
+        gap: 24px; 
+      }
+      
+      .nav-links a { 
+        color: var(--text-secondary); 
+        text-decoration: none; 
+        font-size: 14px; 
+        transition: color 0.2s ease;
+      }
+      
+      .nav-links a:hover { 
+        color: var(--accent-primary); 
+      }
+    </style>
+  </head>
+  <body class="theme-dark">
+    <header class="header">
+      <div class="header-inner">
+        <div class="brand">
+          <a href="../app.html">MUMULAB</a>
+        </div>
+        <nav class="nav-links">
+          <a href="../tools/">도구</a>
+          <a href="../blog/">블로그</a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="tool-header">
+        <div class="tool-icon">🚀</div>
+        <h1 class="tool-title">프로젝트 관리자</h1>
+        <p class="tool-description">아이디어부터 출시까지 전체 프로젝트 생명주기를 관리하는 도구입니다.</p>
+      </div>
+
+      <div class="demo-section">
+        <h2 class="demo-title">주요 기능</h2>
+        <ul>
+          <li>아이디어 수집 및 검증 시스템</li>
+          <li>시장 조사 및 경쟁사 분석</li>
+          <li>비즈니스 모델 캔버스</li>
+          <li>개발 로드맵 및 마일스톤 관리</li>
+          <li>팀원 협업 및 태스크 관리</li>
+          <li>출시 전략 및 마케팅 플랜</li>
+        </ul>
+      </div>
+
+      <div class="coming-soon">
+        <p>🚧 현재 개발 중입니다</p>
+        <p>곧 출시 예정이니 조금만 기다려주세요!</p>
+      </div>
+    </div>
+  </body>
+</html>
