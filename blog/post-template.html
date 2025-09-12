@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MUMULAB Blog</title>
+    <link rel="stylesheet" href="../style.css" />
+    <style>
+      body { background: var(--bg-primary); color: var(--text-primary); user-select: text; overflow: auto; }
+      .container { max-width: 800px; margin: 72px auto 64px; padding: 0 24px; }
+      
+      .post-header {
+        margin-bottom: 32px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--border-primary);
+      }
+      
+      .post-meta { 
+        display: flex; 
+        gap: 12px; 
+        margin-bottom: 16px; 
+        font-size: 14px; 
+        color: var(--text-tertiary);
+      }
+      .post-category { 
+        background: var(--accent-primary); 
+        color: white; 
+        padding: 4px 8px; 
+        border-radius: var(--radius-sm); 
+        font-size: 12px;
+        font-weight: 500;
+      }
+      
+      .post-title { 
+        font-size: 32px; 
+        font-weight: 700; 
+        line-height: 1.2;
+        margin-bottom: 16px; 
+        color: var(--text-primary);
+      }
+      
+      .post-summary {
+        font-size: 18px;
+        color: var(--text-secondary);
+        line-height: 1.6;
+      }
+
+      .post-content {
+        line-height: 1.7;
+        color: var(--text-primary);
+      }
+      
+      .post-content h1, .post-content h2, .post-content h3, 
+      .post-content h4, .post-content h5, .post-content h6 { 
+        margin: 32px 0 16px; 
+        font-weight: 600;
+      }
+      .post-content h1 { font-size: 28px; }
+      .post-content h2 { font-size: 24px; }
+      .post-content h3 { font-size: 20px; }
+      
+      .post-content p { margin: 16px 0; }
+      .post-content ul, .post-content ol { 
+        margin: 16px 0; 
+        padding-left: 24px; 
+      }
+      .post-content li { margin: 8px 0; }
+      
+      .post-content pre { 
+        background: var(--bg-tertiary); 
+        border: 1px solid var(--border-primary); 
+        border-radius: 8px; 
+        padding: 16px; 
+        overflow: auto; 
+        margin: 16px 0;
+        font-size: 14px;
+      }
+      
+      .post-content code { 
+        background: var(--bg-tertiary); 
+        border: 1px solid var(--border-primary); 
+        border-radius: 4px; 
+        padding: 2px 4px;
+        font-size: 14px;
+      }
+      
+      .post-content pre code {
+        background: none;
+        border: none;
+        padding: 0;
+      }
+      
+      .post-content blockquote {
+        border-left: 4px solid var(--accent-primary);
+        padding-left: 16px;
+        margin: 16px 0;
+        color: var(--text-secondary);
+        font-style: italic;
+      }
+      
+      .post-content img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin: 16px 0;
+      }
+      
+      .post-content table { 
+        width: 100%; 
+        border-collapse: collapse; 
+        margin: 16px 0; 
+      }
+      .post-content th, .post-content td { 
+        border: 1px solid var(--border-primary); 
+        padding: 12px; 
+        text-align: left;
+      }
+      .post-content th {
+        background: var(--bg-tertiary);
+        font-weight: 600;
+      }
+
+      .post-navigation {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 48px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border-primary);
+      }
+      
+      .nav-link {
+        color: var(--accent-primary);
+        text-decoration: none;
+        padding: 12px 16px;
+        border: 1px solid var(--border-primary);
+        border-radius: var(--radius-md);
+        background: var(--bg-secondary);
+        transition: all 0.2s ease;
+      }
+      .nav-link:hover {
+        background: var(--accent-primary);
+        color: white;
+        border-color: var(--accent-primary);
+      }
+
+      .header { position: fixed; top:0; left:0; right:0; height: 56px; background: var(--bg-primary); border-bottom: 1px solid var(--border-primary); z-index: 10; display:flex; align-items:center; }
+      .header-inner { display:flex; align-items:center; justify-content:space-between; gap: 12px; height:100%; padding: 0 16px; max-width: 1200px; margin: 0 auto; width: 100%; }
+      .brand { font-weight: 600; letter-spacing: -0.01em; }
+      .brand a { color: var(--text-primary); text-decoration: none; }
+      .nav-links { display:flex; gap: 20px; }
+      .nav-links a { color: var(--text-secondary); text-decoration:none; font-size: 14px; }
+      .nav-links a:hover { color: var(--text-primary); }
+
+      .loading { text-align: center; color: var(--text-secondary); margin-top: 40px; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  </head>
+  <body class="theme-dark">
+    <header class="header">
+      <div class="header-inner">
+        <div class="brand"><a href="../app.html">MUMULAB</a></div>
+        <nav class="nav-links">
+          <a href="../app.html">홈</a>
+          <a href="../blog/">블로그</a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container">
+      <div id="loading" class="loading">글을 불러오는 중...</div>
+      
+      <article id="post-container" style="display: none;">
+        <div class="post-header">
+          <div class="post-meta">
+            <span id="post-category" class="post-category"></span>
+            <span id="post-date"></span>
+          </div>
+          <h1 id="post-title" class="post-title"></h1>
+          <div id="post-summary" class="post-summary"></div>
+        </div>
+        
+        <div id="post-content" class="post-content">
+          <!-- 마크다운 내용이 여기에 렌더링됩니다 -->
+        </div>
+      </article>
+
+      <div class="post-navigation">
+        <a href="../blog/" class="nav-link">← 블로그 목록으로</a>
+      </div>
+    </div>
+
+    <script>
+      // URL에서 포스트 슬러그 추출
+      function getPostSlug() {
+        const path = window.location.pathname;
+        const segments = path.split('/');
+        const filename = segments[segments.length - 1];
+        return filename.replace('.html', '');
+      }
+
+      // 블로그 포스트 메타데이터
+      const postMetadata = {
+        'mumulab-project-start': {
+          title: 'MUMULAB 프로젝트 시작하기',
+          summary: '새로운 프로젝트 관리 도구 MUMULAB을 소개합니다. 아이디어부터 출시까지 전 과정을 체계적으로 관리할 수 있습니다.',
+          category: 'business',
+          date: '2024-01-15'
+        },
+        'static-site-blog': {
+          title: '정적 사이트에 블로그 기능 추가하기',
+          summary: 'HTML과 JavaScript만으로 간단한 블로그 시스템을 구축하는 방법을 알아봅니다.',
+          category: 'tech',
+          date: '2024-01-14'
+        },
+        'efficient-work-management': {
+          title: '효율적인 업무 관리 방법',
+          summary: 'TodoList를 활용한 체계적인 업무 관리와 생산성 향상 팁을 공유합니다.',
+          category: 'life',
+          date: '2024-01-13'
+        }
+      };
+
+      const categoryNames = {
+        'tech': '기술',
+        'business': '비즈니스', 
+        'life': '일상'
+      };
+
+      // 마크다운 파일 로드 및 렌더링
+      async function loadPost() {
+        const slug = getPostSlug();
+        const metadata = postMetadata[slug];
+        
+        if (!metadata) {
+          document.getElementById('loading').textContent = '포스트를 찾을 수 없습니다.';
+          return;
+        }
+
+        try {
+          // 메타데이터 설정
+          document.title = `${metadata.title} - MUMULAB Blog`;
+          document.getElementById('post-title').textContent = metadata.title;
+          document.getElementById('post-summary').textContent = metadata.summary;
+          document.getElementById('post-category').textContent = categoryNames[metadata.category];
+          document.getElementById('post-date').textContent = metadata.date;
+
+          // 마크다운 파일 로드
+          const response = await fetch(`../posts/${slug}.md`);
+          if (!response.ok) {
+            throw new Error('포스트를 불러올 수 없습니다.');
+          }
+
+          const markdown = await response.text();
+          const html = marked.parse(markdown);
+          
+          document.getElementById('post-content').innerHTML = html;
+          document.getElementById('loading').style.display = 'none';
+          document.getElementById('post-container').style.display = 'block';
+
+        } catch (error) {
+          document.getElementById('loading').textContent = '포스트를 불러오는 중 오류가 발생했습니다.';
+          console.error('Error loading post:', error);
+        }
+      }
+
+      // 페이지 로드 시 포스트 로드
+      document.addEventListener('DOMContentLoaded', loadPost);
+    </script>
+  </body>
+</html>

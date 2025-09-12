@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MUMULAB Blog</title>
+    <link rel="stylesheet" href="../style.css" />
+    <style>
+      body { background: var(--bg-primary); color: var(--text-primary); user-select: text; overflow: auto; }
+      .container { max-width: 1080px; margin: 72px auto 64px; padding: 0 24px; }
+      .page-title { font-size: 32px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
+      .page-subtitle { color: var(--text-secondary); margin-bottom: 32px; font-size: 18px; }
+      
+      .blog-grid { display: grid; gap: 24px; }
+      .post-card { 
+        background: var(--bg-secondary); 
+        border: 1px solid var(--border-primary); 
+        border-radius: var(--radius-lg); 
+        padding: 24px;
+        box-shadow: var(--shadow-sm);
+        transition: all 0.2s ease;
+      }
+      .post-card:hover { 
+        border-color: var(--accent-primary);
+        box-shadow: var(--shadow-md);
+      }
+      
+      .post-meta { 
+        display: flex; 
+        gap: 12px; 
+        margin-bottom: 12px; 
+        font-size: 14px; 
+        color: var(--text-tertiary);
+      }
+      .post-category { 
+        background: var(--accent-primary); 
+        color: white; 
+        padding: 4px 8px; 
+        border-radius: var(--radius-sm); 
+        font-size: 12px;
+        font-weight: 500;
+      }
+      
+      .post-title { 
+        font-size: 20px; 
+        font-weight: 600; 
+        margin-bottom: 8px; 
+        color: var(--text-primary);
+      }
+      .post-title a { 
+        color: inherit; 
+        text-decoration: none; 
+      }
+      .post-title a:hover { 
+        color: var(--accent-primary); 
+      }
+      
+      .post-summary { 
+        color: var(--text-secondary); 
+        line-height: 1.6; 
+        margin-bottom: 16px;
+      }
+      
+      .read-more { 
+        color: var(--accent-primary); 
+        text-decoration: none; 
+        font-weight: 500;
+        font-size: 14px;
+      }
+      .read-more:hover { 
+        color: var(--accent-hover); 
+      }
+
+      .category-filter {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 32px;
+        flex-wrap: wrap;
+      }
+      .filter-btn {
+        padding: 8px 16px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-primary);
+        border-radius: var(--radius-md);
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 14px;
+        transition: all 0.2s ease;
+      }
+      .filter-btn:hover, .filter-btn.active {
+        background: var(--accent-primary);
+        border-color: var(--accent-primary);
+        color: white;
+      }
+
+      .header { position: fixed; top:0; left:0; right:0; height: 56px; background: var(--bg-primary); border-bottom: 1px solid var(--border-primary); z-index: 10; display:flex; align-items:center; }
+      .header-inner { display:flex; align-items:center; justify-content:space-between; gap: 12px; height:100%; padding: 0 16px; max-width: 1200px; margin: 0 auto; width: 100%; }
+      .brand { font-weight: 600; letter-spacing: -0.01em; }
+      .brand a { color: var(--text-primary); text-decoration: none; }
+      .nav-links { display:flex; gap: 20px; }
+      .nav-links a { color: var(--text-secondary); text-decoration:none; font-size: 14px; }
+      .nav-links a:hover { color: var(--text-primary); }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  </head>
+  <body class="theme-dark">
+    <header class="header">
+      <div class="header-inner">
+        <div class="brand"><a href="../app.html">MUMULAB</a></div>
+        <nav class="nav-links">
+          <a href="../app.html">홈</a>
+          <a href="./" class="active">블로그</a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="page-title">블로그</div>
+      <div class="page-subtitle">생각, 경험, 그리고 배움을 공유합니다</div>
+
+      <div class="category-filter">
+        <a href="#" class="filter-btn active" data-category="all">전체</a>
+        <a href="#" class="filter-btn" data-category="tech">기술</a>
+        <a href="#" class="filter-btn" data-category="business">비즈니스</a>
+        <a href="#" class="filter-btn" data-category="life">일상</a>
+      </div>
+
+      <div id="blog-posts" class="blog-grid">
+        <!-- 블로그 포스트가 여기에 동적으로 로드됩니다 -->
+      </div>
+    </div>
+
+    <script>
+      // 블로그 포스트 데이터
+      const blogPosts = [
+        {
+          id: 1,
+          title: "MUMULAB 프로젝트 시작하기",
+          summary: "새로운 프로젝트 관리 도구 MUMULAB을 소개합니다. 아이디어부터 출시까지 전 과정을 체계적으로 관리할 수 있습니다.",
+          category: "business",
+          date: "2024-01-15",
+          slug: "mumulab-project-start"
+        },
+        {
+          id: 2,
+          title: "정적 사이트에 블로그 기능 추가하기",
+          summary: "HTML과 JavaScript만으로 간단한 블로그 시스템을 구축하는 방법을 알아봅니다.",
+          category: "tech",
+          date: "2024-01-14",
+          slug: "static-site-blog"
+        },
+        {
+          id: 3,
+          title: "효율적인 업무 관리 방법",
+          summary: "TodoList를 활용한 체계적인 업무 관리와 생산성 향상 팁을 공유합니다.",
+          category: "life",
+          date: "2024-01-13",
+          slug: "efficient-work-management"
+        }
+      ];
+
+      // 카테고리별 한글 이름 매핑
+      const categoryNames = {
+        'tech': '기술',
+        'business': '비즈니스', 
+        'life': '일상'
+      };
+
+      // 블로그 포스트 렌더링
+      function renderPosts(posts) {
+        const container = document.getElementById('blog-posts');
+        
+        if (posts.length === 0) {
+          container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; margin-top: 40px;">아직 작성된 글이 없습니다.</p>';
+          return;
+        }
+
+        container.innerHTML = posts.map(post => `
+          <article class="post-card">
+            <div class="post-meta">
+              <span class="post-category">${categoryNames[post.category] || post.category}</span>
+              <span>${post.date}</span>
+            </div>
+            <h2 class="post-title">
+              <a href="posts/${post.slug}.html">${post.title}</a>
+            </h2>
+            <p class="post-summary">${post.summary}</p>
+            <a href="posts/${post.slug}.html" class="read-more">자세히 읽기 →</a>
+          </article>
+        `).join('');
+      }
+
+      // 카테고리 필터링
+      function filterPosts(category) {
+        const filtered = category === 'all' 
+          ? blogPosts 
+          : blogPosts.filter(post => post.category === category);
+        
+        // 날짜순 정렬 (최신순)
+        filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+        
+        renderPosts(filtered);
+
+        // 활성 버튼 업데이트
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        document.querySelector(`[data-category="${category}"]`).classList.add('active');
+      }
+
+      // 이벤트 리스너 등록
+      document.addEventListener('DOMContentLoaded', function() {
+        // 초기 로드
+        filterPosts('all');
+
+        // 필터 버튼 클릭 이벤트
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const category = btn.dataset.category;
+            filterPosts(category);
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
