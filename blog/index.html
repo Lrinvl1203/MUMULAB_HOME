@@ -93,30 +93,120 @@
         color: white;
       }
 
-      .header { position: fixed; top:0; left:0; right:0; height: 56px; background: var(--bg-primary); border-bottom: 1px solid var(--border-primary); z-index: 10; display:flex; align-items:center; }
-      .header-inner { display:flex; align-items:center; justify-content:space-between; gap: 12px; height:100%; padding: 0 16px; max-width: 1200px; margin: 0 auto; width: 100%; }
-      .brand { font-weight: 600; letter-spacing: -0.01em; }
-      .brand a { color: var(--text-primary); text-decoration: none; }
-      .nav-links { display:flex; gap: 20px; }
-      .nav-links a { color: var(--text-secondary); text-decoration:none; font-size: 14px; }
-      .nav-links a:hover { color: var(--text-primary); }
+      .header { 
+        position: fixed; 
+        top: 0; 
+        left: 0; 
+        right: 0; 
+        height: 56px; 
+        background: var(--bg-primary); 
+        border-bottom: 1px solid var(--border-primary); 
+        z-index: 10; 
+        display: flex; 
+        align-items: center; 
+      }
+      
+      .header-inner { 
+        display: flex; 
+        align-items: center; 
+        justify-content: space-between; 
+        gap: 12px; 
+        height: 100%; 
+        padding: 0 16px; 
+        max-width: 1200px; 
+        margin: 0 auto; 
+        width: 100%; 
+      }
+      
+      .brand { 
+        font-weight: 600; 
+        letter-spacing: -0.01em; 
+        font-size: 18px;
+      }
+      
+      .brand a { 
+        color: var(--text-primary); 
+        text-decoration: none; 
+      }
+      
+      .nav-links { 
+        display: flex; 
+        gap: 24px; 
+      }
+      
+      .nav-links a { 
+        color: var(--text-secondary); 
+        text-decoration: none; 
+        font-size: 14px; 
+        transition: color 0.2s ease;
+      }
+      
+      .nav-links a:hover { 
+        color: var(--accent-primary); 
+      }
+      
+      .dropdown {
+        position: relative;
+      }
+      
+      .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: var(--bg-elevated);
+        border: 1px solid var(--border-primary);
+        border-radius: var(--radius-md);
+        padding: 8px 0;
+        min-width: 160px;
+        box-shadow: var(--shadow-lg);
+      }
+      
+      .dropdown:hover .dropdown-menu {
+        display: block;
+      }
+      
+      .dropdown-menu a {
+        display: block;
+        padding: 8px 16px;
+        color: var(--text-primary);
+        font-size: 13px;
+        transition: background-color 0.2s ease;
+      }
+      
+      .dropdown-menu a:hover {
+        background: var(--bg-tertiary);
+        color: var(--accent-primary);
+      }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   </head>
   <body class="theme-dark">
     <header class="header">
       <div class="header-inner">
-        <div class="brand"><a href="../app.html">MUMULAB</a></div>
+        <div class="brand">
+          <a href="../app.html">MUMULAB</a>
+        </div>
         <nav class="nav-links">
-          <a href="../app.html">홈</a>
-          <a href="./" class="active">블로그</a>
+          <a href="../tools/index.html">도구</a>
+          <div class="dropdown">
+            <a href="./index.html" style="color: var(--accent-primary);">블로그</a>
+            <div class="dropdown-menu">
+              <a href="./index.html">전체 글</a>
+              <a href="./index.html?category=tech">기술</a>
+              <a href="./index.html?category=business">비즈니스</a>
+              <a href="./index.html?category=life">일상</a>
+            </div>
+          </div>
         </nav>
       </div>
     </header>
 
     <div class="container">
-      <div class="page-title">블로그</div>
-      <div class="page-subtitle">생각, 경험, 그리고 배움을 공유합니다</div>
+      <div style="text-align: center; margin: 48px 0;">
+        <h1 style="font-size: 48px; font-weight: 800; margin-bottom: 16px; background: var(--gradient-accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">📝 블로그</h1>
+        <p style="font-size: 18px; color: var(--text-secondary);">생각, 경험, 그리고 배움을 공유합니다</p>
+      </div>
 
       <div class="category-filter">
         <a href="#" class="filter-btn active" data-category="all">전체</a>

@@ -166,10 +166,6 @@
         color: var(--accent-primary); 
       }
       
-      .nav-links a.active {
-        color: var(--accent-primary);
-        font-weight: 500;
-      }
 
       .dropdown {
         position: relative;
@@ -204,6 +200,114 @@
         background: var(--bg-tertiary);
         color: var(--accent-primary);
       }
+
+      /* 앱 뷰어 스타일 */
+      .app-viewer {
+        margin-top: 24px;
+      }
+
+      .app-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 0;
+        border-bottom: 1px solid var(--border-primary);
+        margin-bottom: 16px;
+      }
+
+      .app-header-left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .back-button {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-primary);
+        color: var(--text-primary);
+        padding: 8px 16px;
+        border-radius: var(--radius-md);
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.2s ease;
+      }
+
+      .back-button:hover {
+        background: var(--bg-tertiary);
+        border-color: var(--accent-primary);
+        color: var(--accent-primary);
+      }
+
+      .current-app-title {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .fullscreen-button {
+        background: var(--accent-primary);
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        border-radius: var(--radius-md);
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+      }
+
+      .fullscreen-button:hover {
+        background: var(--accent-hover);
+        transform: translateY(-1px);
+      }
+
+      .app-content {
+        position: relative;
+        width: 100%;
+        height: calc(100vh - 200px);
+        min-height: 600px;
+        border: 1px solid var(--border-primary);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        background: var(--bg-secondary);
+      }
+
+      .loading-indicator {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        z-index: 10;
+      }
+
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid var(--border-primary);
+        border-top: 4px solid var(--accent-primary);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 16px;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      .loading-indicator p {
+        color: var(--text-secondary);
+        margin: 0;
+      }
+
+      #app-iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        background: white;
+      }
     </style>
   </head>
   <body class="theme-dark">
@@ -213,14 +317,14 @@
           <a href="../app.html">MUMULAB</a>
         </div>
         <nav class="nav-links">
-          <a href="#" class="active">도구</a>
+          <a href="./index.html" style="color: var(--accent-primary);">도구</a>
           <div class="dropdown">
-            <a href="../blog/">블로그</a>
+            <a href="../blog/index.html">블로그</a>
             <div class="dropdown-menu">
-              <a href="../blog/">전체 글</a>
-              <a href="../blog/?category=tech">기술</a>
-              <a href="../blog/?category=business">비즈니스</a>
-              <a href="../blog/?category=life">일상</a>
+              <a href="../blog/index.html">전체 글</a>
+              <a href="../blog/index.html?category=tech">기술</a>
+              <a href="../blog/index.html?category=business">비즈니스</a>
+              <a href="../blog/index.html?category=life">일상</a>
             </div>
           </div>
         </nav>
@@ -233,8 +337,33 @@
         <p class="page-subtitle">생산성을 높이는 AI 기반 도구 모음</p>
       </div>
 
+      <!-- 앱 그리드 (기본 보기) -->
       <div class="apps-grid" id="apps-grid">
         <!-- 앱들이 JavaScript로 동적으로 로드됩니다 -->
+      </div>
+
+      <!-- 앱 뷰어 (앱 실행 시 보기) -->
+      <div class="app-viewer" id="app-viewer" style="display: none;">
+        <div class="app-header">
+          <div class="app-header-left">
+            <button class="back-button" id="back-button">
+              ← 도구 목록으로 돌아가기
+            </button>
+            <h2 class="current-app-title" id="current-app-title"></h2>
+          </div>
+          <div class="app-header-right">
+            <button class="fullscreen-button" id="fullscreen-button">
+              🔗 전체 페이지로 열기
+            </button>
+          </div>
+        </div>
+        <div class="app-content">
+          <div class="loading-indicator" id="loading-indicator">
+            <div class="spinner"></div>
+            <p>앱을 로드하는 중...</p>
+          </div>
+          <iframe id="app-iframe" src="" frameborder="0"></iframe>
+        </div>
       </div>
     </div>
 
@@ -243,50 +372,100 @@
       const apps = [
         {
           id: 'blog-writer',
-          name: '블로그 자동화',
-          description: 'AI 블로그 글 작성',
+          name: '블로그 글쓰기 AI',
+          description: 'AI 도우미와 함께 고품질 블로그 작성',
           icon: '✍️',
-          url: '../apps/blog-writer.html',
-          comingSoon: true
+          url: '../apps/BlogWriter/index.html',
+          comingSoon: false
         },
         {
-          id: 'seo-analyzer', 
-          name: 'SEO 분석기',
-          description: 'SEO 성능 분석',
-          icon: '🔍',
-          url: '../apps/seo-analyzer.html',
-          comingSoon: true
+          id: 'photo-to-blog',
+          name: '사진으로 블로그',
+          description: '사진 한 장으로 완벽한 블로그 포스트 생성',
+          icon: '📸',
+          url: '../apps/PhotoToBlog/index.html',
+          comingSoon: false
         },
         {
-          id: 'project-manager',
-          name: '프로젝트 관리자',
-          description: '프로젝트 생명주기 관리',
-          icon: '🚀',
-          url: '../apps/project-manager.html',
-          comingSoon: true
-        },
-        {
-          id: 'ai-assistant',
-          name: 'AI 어시스턴트',
-          description: '맞춤형 업무 도우미',
-          icon: '🤖',
-          url: '../apps/ai-assistant.html',
-          comingSoon: true
+          id: 'youtube-analyzer',
+          name: 'YouTube 분석기',
+          description: 'YouTube 채널 완전 분석 도구',
+          icon: '🎯',
+          url: '../apps/YoutubeToGold/index.html',
+          comingSoon: false
         }
       ];
 
+      // 현재 로드된 앱 정보
+      let currentApp = null;
+
+      // 앱 뷰어 요소들
+      const appGrid = document.getElementById('apps-grid');
+      const appViewer = document.getElementById('app-viewer');
+      const currentAppTitle = document.getElementById('current-app-title');
+      const appIframe = document.getElementById('app-iframe');
+      const loadingIndicator = document.getElementById('loading-indicator');
+      const backButton = document.getElementById('back-button');
+      const fullscreenButton = document.getElementById('fullscreen-button');
+
+      // 앱 로드 함수
+      function loadApp(app) {
+        currentApp = app;
+        currentAppTitle.textContent = app.name;
+        
+        // 뷰 전환
+        appGrid.style.display = 'none';
+        appViewer.style.display = 'block';
+        
+        // 로딩 표시
+        loadingIndicator.style.display = 'block';
+        appIframe.style.display = 'none';
+        
+        // iframe 로드
+        appIframe.src = app.url;
+        appIframe.onload = () => {
+          loadingIndicator.style.display = 'none';
+          appIframe.style.display = 'block';
+        };
+      }
+
+      // 앱 리스트로 돌아가기
+      function backToAppList() {
+        appViewer.style.display = 'none';
+        appGrid.style.display = 'grid';
+        currentApp = null;
+        appIframe.src = '';
+      }
+
+      // 전체 페이지로 열기
+      function openFullscreen() {
+        if (currentApp) {
+          window.open(currentApp.url, '_blank');
+        }
+      }
+
       // 앱 카드 생성 함수
       function createAppCard(app) {
-        const card = document.createElement('a');
+        const card = document.createElement('div');
         card.className = 'app-card';
-        card.href = app.url;
-        card.onclick = (e) => {
-          // 애니메이션 효과
-          card.style.transform = 'scale(0.95)';
-          setTimeout(() => {
-            window.location.href = app.url;
-          }, 100);
-        };
+        
+        // comingSoon인 경우 클릭 방지
+        if (app.comingSoon) {
+          card.onclick = (e) => {
+            e.preventDefault();
+            alert('곧 출시 예정입니다!');
+          };
+        } else {
+          card.onclick = (e) => {
+            e.preventDefault();
+            // 애니메이션 효과
+            card.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+              loadApp(app);
+              card.style.transform = '';
+            }, 100);
+          };
+        }
 
         card.innerHTML = `
           ${app.comingSoon ? '<div class="coming-soon">SOON</div>' : ''}
@@ -308,11 +487,28 @@
         });
       }
 
-      // 페이지 로드 시 앱 렌더링
-      document.addEventListener('DOMContentLoaded', renderApps);
+      // 이벤트 리스너 등록
+      document.addEventListener('DOMContentLoaded', () => {
+        renderApps();
+        
+        // 뒤로 가기 버튼
+        backButton.addEventListener('click', backToAppList);
+        
+        // 전체 페이지 버튼
+        fullscreenButton.addEventListener('click', openFullscreen);
+      });
 
-      // 키보드 네비게이션 지원 (선택사항)
+      // 키보드 네비게이션 지원
       document.addEventListener('keydown', (e) => {
+        // 앱 뷰어가 열려있을 때
+        if (appViewer.style.display === 'block') {
+          if (e.key === 'Escape') {
+            backToAppList();
+          }
+          return;
+        }
+
+        // 앱 그리드에서의 키보드 네비게이션
         const cards = document.querySelectorAll('.app-card');
         let currentIndex = Array.from(cards).findIndex(card => card === document.activeElement);
         
