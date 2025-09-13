@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MUMULAB - 이용약관</title>
+    <link rel="stylesheet" href="../style.css" />
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-R96NX2MK78"></script>
+    <script src="../analytics.js"></script>
+    <style>
+      body { background: var(--bg-primary); color: var(--text-primary); user-select: text; overflow: auto; }
+      .container { max-width: 800px; margin: 96px auto 64px; padding: 0 24px; line-height: 1.7; }
+
+      /* Modern Header Navigation */
+      .header { 
+        position: fixed; 
+        top: 0; 
+        left: 0; 
+        right: 0; 
+        height: 72px; 
+        background: rgba(10, 10, 10, 0.95); 
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
+        z-index: 100; 
+        display: flex; 
+        align-items: center;
+        backdrop-filter: blur(20px);
+      }
+      
+      .header-inner { 
+        display: flex; 
+        align-items: center; 
+        justify-content: space-between; 
+        gap: 24px; 
+        height: 100%; 
+        padding: 0 24px; 
+        max-width: 1200px; 
+        margin: 0 auto; 
+        width: 100%; 
+      }
+      
+      .brand { 
+        font-weight: 800; 
+        letter-spacing: 0.12em; 
+        font-size: 20px;
+        text-indent: 0.12em;
+      }
+      
+      .brand a { 
+        color: #ffffff; 
+        text-decoration: none;
+        transition: opacity 0.3s ease;
+      }
+
+      .brand a:hover {
+        opacity: 0.8;
+      }
+      
+      .nav-pills { 
+        display: flex; 
+        gap: 16px;
+        align-items: center;
+      }
+      
+      .nav-pill {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 20px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        text-decoration: none;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .nav-pill::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.6s;
+      }
+
+      .nav-pill:hover::before {
+        left: 100%;
+      }
+
+      .nav-pill:hover {
+        transform: translateY(-2px);
+        border-color: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      }
+
+      .nav-pill.active {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+      }
+
+      .nav-pill-icon {
+        font-size: 16px;
+        opacity: 0.8;
+      }
+
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        font-size: 14px;
+        margin-bottom: 32px;
+        transition: color 0.3s ease;
+      }
+
+      .back-link:hover {
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .page-title {
+        font-size: 36px;
+        font-weight: 700;
+        margin-bottom: 16px;
+        color: rgba(255, 255, 255, 0.95);
+      }
+
+      .last-updated {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 14px;
+        margin-bottom: 48px;
+      }
+
+      .content h2 {
+        font-size: 24px;
+        font-weight: 600;
+        margin: 48px 0 24px 0;
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .content h3 {
+        font-size: 20px;
+        font-weight: 600;
+        margin: 32px 0 16px 0;
+        color: rgba(255, 255, 255, 0.85);
+      }
+
+      .content p {
+        margin-bottom: 16px;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .content ul {
+        margin-bottom: 16px;
+        padding-left: 20px;
+      }
+
+      .content li {
+        margin-bottom: 8px;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .content strong {
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      @media (max-width: 768px) {
+        .header-inner {
+          padding: 0 16px;
+          gap: 16px;
+        }
+        
+        .nav-pills {
+          gap: 8px;
+        }
+        
+        .nav-pill {
+          padding: 10px 16px;
+          font-size: 13px;
+        }
+        
+        .brand {
+          font-size: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body class="theme-dark">
+    <header class="header">
+      <div class="header-inner">
+        <div class="brand">
+          <a href="../app.html">MUMULAB</a>
+        </div>
+        <nav class="nav-pills">
+          <a href="../blog/index.html" class="nav-pill">
+            <div class="nav-pill-icon">📝</div>
+            블로그
+          </a>
+          <a href="../tools/index.html" class="nav-pill">
+            <div class="nav-pill-icon">🛠️</div>
+            도구
+          </a>
+          <a href="./index.html" class="nav-pill active">
+            <div class="nav-pill-icon">ℹ️</div>
+            정보
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container">
+      <a href="index.html" class="back-link">
+        ← 서비스 정보로 돌아가기
+      </a>
+
+      <h1 class="page-title">이용약관</h1>
+      <p class="last-updated">최종 업데이트: 2024년 1월 15일</p>
+
+      <div class="content">
+        <h2>제1조 (목적)</h2>
+        <p>본 약관은 MUMULAB(이하 "서비스")이 제공하는 인터넷 관련 서비스(이하 "서비스")를 이용함에 있어 "서비스"와 이용자의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.</p>
+
+        <h2>제2조 (정의)</h2>
+        <ul>
+          <li><strong>"서비스"</strong>란 MUMULAB이 제공하는 모든 웹사이트 서비스 및 관련 기능을 의미합니다.</li>
+          <li><strong>"이용자"</strong>란 본 약관에 따라 서비스를 이용하는 자를 의미합니다.</li>
+          <li><strong>"콘텐츠"</strong>란 서비스 내에서 제공되는 모든 텍스트, 이미지, 영상, 소프트웨어 등을 의미합니다.</li>
+        </ul>
+
+        <h2>제3조 (약관의 명시와 설명 및 개정)</h2>
+        <ul>
+          <li>본 약관의 내용은 서비스 화면에 게시하거나 기타의 방법으로 이용자에게 공지합니다.</li>
+          <li>관련 법령이나 합리적인 사유가 발생할 경우 본 약관을 개정할 수 있습니다.</li>
+          <li>약관이 개정될 경우, 적용일자 및 개정사유를 명시하여 사전에 공지합니다.</li>
+        </ul>
+
+        <h2>제4조 (서비스의 제공 및 변경)</h2>
+        <ul>
+          <li>서비스는 다음과 같은 업무를 제공합니다:
+            <ul>
+              <li>AI 기반 생산성 도구 제공</li>
+              <li>블로그 및 콘텐츠 서비스</li>
+              <li>기타 관련 부가 서비스</li>
+            </ul>
+          </li>
+          <li>서비스의 내용, 품질, 기능 등을 개선하기 위해 변경할 수 있습니다.</li>
+          <li>서비스 변경 시 사전 공지를 원칙으로 합니다.</li>
+        </ul>
+
+        <h2>제5조 (서비스의 중단)</h2>
+        <p>다음 각 호의 경우에는 서비스 제공을 중단할 수 있습니다:</p>
+        <ul>
+          <li>설비의 보수 등 공사로 인한 부득이한 경우</li>
+          <li>전기통신사업법에 규정된 기간통신사업자가 전기통신 서비스를 중지했을 경우</li>
+          <li>기타 불가항력적 사유가 있는 경우</li>
+        </ul>
+
+        <h2>제6조 (이용자의 의무)</h2>
+        <p>이용자는 다음 각 호의 행위를 하여서는 안 됩니다:</p>
+        <ul>
+          <li>신청 또는 변경 시 허위내용의 등록</li>
+          <li>서비스에 게시된 정보의 변경</li>
+          <li>서비스가 정한 정보 이외의 정보(컴퓨터 프로그램 등) 등의 송신 또는 게시</li>
+          <li>서비스 기타 제3자의 저작권 등 지적재산권에 대한 침해</li>
+          <li>서비스 기타 제3자의 명예를 손상시키거나 업무를 방해하는 행위</li>
+          <li>외설 또는 폭력적인 메시지, 화상, 음성, 기타 공서양속에 반하는 정보를 서비스에 공개 또는 게시하는 행위</li>
+        </ul>
+
+        <h2>제7조 (저작권의 귀속 및 이용제한)</h2>
+        <ul>
+          <li>서비스가 작성한 저작물에 대한 저작권 기타 지적재산권은 서비스에 귀속합니다.</li>
+          <li>이용자는 서비스를 이용함으로써 얻은 정보를 서비스의 사전 승낙 없이 복제, 송신, 출판, 배포, 방송 기타 방법에 의하여 영리목적으로 이용하거나 제3자에게 이용하게 하여서는 안됩니다.</li>
+        </ul>
+
+        <h2>제8조 (개인정보보호)</h2>
+        <p>서비스는 관련법령이 정하는 바에 따라서 이용자의 개인정보를 보호하기 위해 노력합니다. 개인정보의 보호 및 사용에 대해서는 관련법령 및 서비스의 개인정보처리방침이 적용됩니다.</p>
+
+        <h2>제9조 (서비스의 책임제한)</h2>
+        <ul>
+          <li>서비스는 천재지변 또는 이에 준하는 불가항력으로 인하여 서비스를 제공할 수 없는 경우에는 서비스 제공에 관한 책임이 면제됩니다.</li>
+          <li>서비스는 이용자의 귀책사유로 인한 서비스 이용의 장애에 대하여는 책임을 지지 않습니다.</li>
+          <li>서비스는 이용자가 서비스에 게재한 정보, 자료, 사실의 신뢰도, 정확성 등의 내용에 관하여는 책임을 지지 않습니다.</li>
+        </ul>
+
+        <h2>제10조 (분쟁해결)</h2>
+        <ul>
+          <li>서비스와 이용자는 서비스 이용과 관련해 발생한 분쟁을 원만하게 해결하기 위하여 필요한 모든 노력을 하여야 합니다.</li>
+          <li>제1항의 규정에도 불구하고 분쟁으로 인하여 소송이 제기될 경우 소송은 대한민국 법원의 관할로 합니다.</li>
+        </ul>
+
+        <h2>제11조 (준거법)</h2>
+        <p>이 약관과 서비스 이용에 관하여는 대한민국의 법을 적용합니다.</p>
+
+        <h2>제12조 (기타)</h2>
+        <ul>
+          <li>본 약관에서 정하지 아니한 사항과 본 약관의 해석에 관하여는 관련법령 또는 상관례에 따릅니다.</li>
+          <li>서비스는 필요에 따라 특정 서비스에 관한 별도의 이용약관 및 정책을 둘 수 있습니다.</li>
+        </ul>
+
+        <h2>부칙</h2>
+        <p>본 약관은 2024년 1월 15일부터 적용됩니다.</p>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        if (window.Analytics) {
+          Analytics.trackPageView('Terms of Service', 'policy');
+        }
+      });
+    </script>
+  </body>
+</html>

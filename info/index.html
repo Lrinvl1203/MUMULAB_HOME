@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MUMULAB - 서비스 정보</title>
+    <link rel="stylesheet" href="../style.css" />
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-R96NX2MK78"></script>
+    <script src="../analytics.js"></script>
+    <style>
+      body { background: var(--bg-primary); color: var(--text-primary); user-select: text; overflow: auto; }
+      .container { max-width: 1080px; margin: 96px auto 64px; padding: 0 24px; }
+
+      /* Modern Header Navigation */
+      .header { 
+        position: fixed; 
+        top: 0; 
+        left: 0; 
+        right: 0; 
+        height: 72px; 
+        background: rgba(10, 10, 10, 0.95); 
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
+        z-index: 100; 
+        display: flex; 
+        align-items: center;
+        backdrop-filter: blur(20px);
+      }
+      
+      .header-inner { 
+        display: flex; 
+        align-items: center; 
+        justify-content: space-between; 
+        gap: 24px; 
+        height: 100%; 
+        padding: 0 24px; 
+        max-width: 1200px; 
+        margin: 0 auto; 
+        width: 100%; 
+      }
+      
+      .brand { 
+        font-weight: 800; 
+        letter-spacing: 0.12em; 
+        font-size: 20px;
+        text-indent: 0.12em;
+      }
+      
+      .brand a { 
+        color: #ffffff; 
+        text-decoration: none;
+        transition: opacity 0.3s ease;
+      }
+
+      .brand a:hover {
+        opacity: 0.8;
+      }
+      
+      .nav-pills { 
+        display: flex; 
+        gap: 16px;
+        align-items: center;
+      }
+      
+      .nav-pill {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 20px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        text-decoration: none;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .nav-pill::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.6s;
+      }
+
+      .nav-pill:hover::before {
+        left: 100%;
+      }
+
+      .nav-pill:hover {
+        transform: translateY(-2px);
+        border-color: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      }
+
+      .nav-pill.active {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+      }
+
+      .nav-pill-icon {
+        font-size: 16px;
+        opacity: 0.8;
+      }
+
+      /* Content Styles */
+      .page-header {
+        text-align: center;
+        margin-bottom: 64px;
+      }
+
+      .page-title {
+        font-size: 48px;
+        font-weight: 800;
+        margin-bottom: 16px;
+        background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.4) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .page-subtitle {
+        font-size: 18px;
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 24px;
+        margin-bottom: 48px;
+      }
+
+      .info-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 32px 24px;
+        text-decoration: none;
+        color: #ffffff;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        position: relative;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+      }
+
+      .info-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+        transition: left 0.6s;
+      }
+
+      .info-card:hover::before {
+        left: 100%;
+      }
+
+      .info-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.05);
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
+      }
+
+      .info-card-icon {
+        font-size: 32px;
+        margin-bottom: 16px;
+        opacity: 0.8;
+      }
+
+      .info-card-title {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .info-card-description {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      @media (max-width: 768px) {
+        .header-inner {
+          padding: 0 16px;
+          gap: 16px;
+        }
+        
+        .nav-pills {
+          gap: 8px;
+        }
+        
+        .nav-pill {
+          padding: 10px 16px;
+          font-size: 13px;
+        }
+        
+        .brand {
+          font-size: 18px;
+        }
+
+        .info-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body class="theme-dark">
+    <header class="header">
+      <div class="header-inner">
+        <div class="brand">
+          <a href="../app.html">MUMULAB</a>
+        </div>
+        <nav class="nav-pills">
+          <a href="../blog/index.html" class="nav-pill">
+            <div class="nav-pill-icon">📝</div>
+            블로그
+          </a>
+          <a href="../tools/index.html" class="nav-pill">
+            <div class="nav-pill-icon">🛠️</div>
+            도구
+          </a>
+          <a href="./index.html" class="nav-pill active">
+            <div class="nav-pill-icon">ℹ️</div>
+            정보
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="page-header">
+        <h1 class="page-title">ℹ️ 서비스 정보</h1>
+        <p class="page-subtitle">MUMULAB 서비스 이용에 필요한 정보를 제공합니다</p>
+      </div>
+
+      <div class="info-grid">
+        <a href="privacy-policy.html" class="info-card">
+          <div class="info-card-icon">🛡️</div>
+          <h3 class="info-card-title">개인정보처리방침</h3>
+          <p class="info-card-description">개인정보 수집, 이용, 보관 및 파기에 관한 정책을 확인하세요</p>
+        </a>
+
+        <a href="terms-of-service.html" class="info-card">
+          <div class="info-card-icon">📋</div>
+          <h3 class="info-card-title">이용약관</h3>
+          <p class="info-card-description">서비스 이용 시 준수해야 할 약관과 규정을 안내합니다</p>
+        </a>
+
+        <a href="about.html" class="info-card">
+          <div class="info-card-icon">👋</div>
+          <h3 class="info-card-title">소개 및 연락처</h3>
+          <p class="info-card-description">MUMULAB 소개와 운영자 정보, 연락 방법을 제공합니다</p>
+        </a>
+
+        <a href="sitemap.html" class="info-card">
+          <div class="info-card-icon">🗺️</div>
+          <h3 class="info-card-title">사이트맵</h3>
+          <p class="info-card-description">웹사이트의 전체 구조와 페이지 목록을 확인하세요</p>
+        </a>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        if (window.Analytics) {
+          Analytics.trackPageView('MUMULAB Info', 'info');
+        }
+      });
+    </script>
+  </body>
+</html>

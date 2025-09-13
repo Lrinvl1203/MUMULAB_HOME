@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MUMULAB - 사이트맵</title>
+    <link rel="stylesheet" href="../style.css" />
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-R96NX2MK78"></script>
+    <script src="../analytics.js"></script>
+    <style>
+      body { background: var(--bg-primary); color: var(--text-primary); user-select: text; overflow: auto; }
+      .container { max-width: 1000px; margin: 96px auto 64px; padding: 0 24px; line-height: 1.7; }
+
+      /* Modern Header Navigation */
+      .header { 
+        position: fixed; 
+        top: 0; 
+        left: 0; 
+        right: 0; 
+        height: 72px; 
+        background: rgba(10, 10, 10, 0.95); 
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
+        z-index: 100; 
+        display: flex; 
+        align-items: center;
+        backdrop-filter: blur(20px);
+      }
+      
+      .header-inner { 
+        display: flex; 
+        align-items: center; 
+        justify-content: space-between; 
+        gap: 24px; 
+        height: 100%; 
+        padding: 0 24px; 
+        max-width: 1200px; 
+        margin: 0 auto; 
+        width: 100%; 
+      }
+      
+      .brand { 
+        font-weight: 800; 
+        letter-spacing: 0.12em; 
+        font-size: 20px;
+        text-indent: 0.12em;
+      }
+      
+      .brand a { 
+        color: #ffffff; 
+        text-decoration: none;
+        transition: opacity 0.3s ease;
+      }
+
+      .brand a:hover {
+        opacity: 0.8;
+      }
+      
+      .nav-pills { 
+        display: flex; 
+        gap: 16px;
+        align-items: center;
+      }
+      
+      .nav-pill {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 20px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        text-decoration: none;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .nav-pill::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.6s;
+      }
+
+      .nav-pill:hover::before {
+        left: 100%;
+      }
+
+      .nav-pill:hover {
+        transform: translateY(-2px);
+        border-color: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      }
+
+      .nav-pill.active {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+      }
+
+      .nav-pill-icon {
+        font-size: 16px;
+        opacity: 0.8;
+      }
+
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        font-size: 14px;
+        margin-bottom: 32px;
+        transition: color 0.3s ease;
+      }
+
+      .back-link:hover {
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .page-title {
+        font-size: 36px;
+        font-weight: 700;
+        margin-bottom: 16px;
+        color: rgba(255, 255, 255, 0.95);
+      }
+
+      .page-subtitle {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 18px;
+        margin-bottom: 48px;
+      }
+
+      .sitemap-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 32px;
+      }
+
+      .sitemap-section {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 32px 24px;
+        backdrop-filter: blur(10px);
+      }
+
+      .section-title {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 24px;
+        color: rgba(255, 255, 255, 0.9);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .section-icon {
+        font-size: 24px;
+        opacity: 0.8;
+      }
+
+      .page-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .page-item {
+        margin-bottom: 12px;
+      }
+
+      .page-link {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        font-size: 14px;
+      }
+
+      .page-link:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.9);
+        transform: translateX(4px);
+      }
+
+      .page-description {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.5);
+        margin-left: 20px;
+        margin-top: 4px;
+      }
+
+      .stats-section {
+        background: rgba(139, 92, 246, 0.1);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        border-radius: 16px;
+        padding: 32px 24px;
+        margin: 48px 0;
+        text-align: center;
+      }
+
+      .stats-title {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 16px;
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 24px;
+        margin-top: 24px;
+      }
+
+      .stat-item {
+        text-align: center;
+      }
+
+      .stat-number {
+        font-size: 32px;
+        font-weight: 700;
+        color: rgba(139, 92, 246, 1);
+        display: block;
+      }
+
+      .stat-label {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.6);
+        margin-top: 4px;
+      }
+
+      @media (max-width: 768px) {
+        .header-inner {
+          padding: 0 16px;
+          gap: 16px;
+        }
+        
+        .nav-pills {
+          gap: 8px;
+        }
+        
+        .nav-pill {
+          padding: 10px 16px;
+          font-size: 13px;
+        }
+        
+        .brand {
+          font-size: 18px;
+        }
+
+        .sitemap-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body class="theme-dark">
+    <header class="header">
+      <div class="header-inner">
+        <div class="brand">
+          <a href="../app.html">MUMULAB</a>
+        </div>
+        <nav class="nav-pills">
+          <a href="../blog/index.html" class="nav-pill">
+            <div class="nav-pill-icon">📝</div>
+            블로그
+          </a>
+          <a href="../tools/index.html" class="nav-pill">
+            <div class="nav-pill-icon">🛠️</div>
+            도구
+          </a>
+          <a href="./index.html" class="nav-pill active">
+            <div class="nav-pill-icon">ℹ️</div>
+            정보
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container">
+      <a href="index.html" class="back-link">
+        ← 서비스 정보로 돌아가기
+      </a>
+
+      <h1 class="page-title">사이트맵</h1>
+      <p class="page-subtitle">MUMULAB 웹사이트의 전체 구조와 페이지 목록입니다</p>
+
+      <div class="stats-section">
+        <h2 class="stats-title">사이트 통계</h2>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span class="stat-number">15+</span>
+            <div class="stat-label">총 페이지</div>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">4</span>
+            <div class="stat-label">주요 섹션</div>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">3</span>
+            <div class="stat-label">AI 도구</div>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">4+</span>
+            <div class="stat-label">블로그 포스트</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sitemap-grid">
+        <div class="sitemap-section">
+          <h2 class="section-title">
+            <span class="section-icon">🏠</span>
+            메인 페이지
+          </h2>
+          <ul class="page-list">
+            <li class="page-item">
+              <a href="../index.html" class="page-link">
+                → 랜딩 페이지
+              </a>
+              <div class="page-description">MUMULAB 진입점</div>
+            </li>
+            <li class="page-item">
+              <a href="../app.html" class="page-link">
+                → 홈페이지
+              </a>
+              <div class="page-description">메인 네비게이션 허브</div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="sitemap-section">
+          <h2 class="section-title">
+            <span class="section-icon">📝</span>
+            블로그
+          </h2>
+          <ul class="page-list">
+            <li class="page-item">
+              <a href="../blog/index.html" class="page-link">
+                → 블로그 홈
+              </a>
+              <div class="page-description">전체 글 목록 및 카테고리 필터</div>
+            </li>
+            <li class="page-item">
+              <a href="../blog/posts/google-ai-studio-blog-automation.html" class="page-link">
+                → Google AI Studio 자동화
+              </a>
+              <div class="page-description">AI 도구 활용 가이드</div>
+            </li>
+            <li class="page-item">
+              <a href="../blog/posts/mumulab-project-start.html" class="page-link">
+                → MUMULAB 프로젝트 시작
+              </a>
+              <div class="page-description">프로젝트 소개</div>
+            </li>
+            <li class="page-item">
+              <a href="../blog/posts/static-site-blog.html" class="page-link">
+                → 정적 사이트 블로그
+              </a>
+              <div class="page-description">기술 튜토리얼</div>
+            </li>
+            <li class="page-item">
+              <a href="../blog/posts/efficient-work-management.html" class="page-link">
+                → 효율적인 업무 관리
+              </a>
+              <div class="page-description">생산성 팁</div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="sitemap-section">
+          <h2 class="section-title">
+            <span class="section-icon">🛠️</span>
+            AI 도구
+          </h2>
+          <ul class="page-list">
+            <li class="page-item">
+              <a href="../tools/index.html" class="page-link">
+                → 도구 홈
+              </a>
+              <div class="page-description">AI 도구 모음</div>
+            </li>
+            <li class="page-item">
+              <a href="../apps/BlogWriter/index.html" class="page-link">
+                → 블로그 글쓰기 AI
+              </a>
+              <div class="page-description">AI 기반 블로그 작성 도구</div>
+            </li>
+            <li class="page-item">
+              <a href="../apps/PhotoBlog/index.html" class="page-link">
+                → 사진으로 블로그
+              </a>
+              <div class="page-description">이미지 기반 콘텐츠 생성</div>
+            </li>
+            <li class="page-item">
+              <a href="../apps/YouTubeAnalyzer/index.html" class="page-link">
+                → YouTube 분석기
+              </a>
+              <div class="page-description">채널 분석 및 최적화</div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="sitemap-section">
+          <h2 class="section-title">
+            <span class="section-icon">ℹ️</span>
+            서비스 정보
+          </h2>
+          <ul class="page-list">
+            <li class="page-item">
+              <a href="./index.html" class="page-link">
+                → 정보 홈
+              </a>
+              <div class="page-description">서비스 정보 허브</div>
+            </li>
+            <li class="page-item">
+              <a href="./privacy-policy.html" class="page-link">
+                → 개인정보처리방침
+              </a>
+              <div class="page-description">개인정보 보호 정책</div>
+            </li>
+            <li class="page-item">
+              <a href="./terms-of-service.html" class="page-link">
+                → 이용약관
+              </a>
+              <div class="page-description">서비스 이용 규정</div>
+            </li>
+            <li class="page-item">
+              <a href="./about.html" class="page-link">
+                → 소개 및 연락처
+              </a>
+              <div class="page-description">회사 소개 및 연락 정보</div>
+            </li>
+            <li class="page-item">
+              <a href="./sitemap.html" class="page-link">
+                → 사이트맵 (현재 페이지)
+              </a>
+              <div class="page-description">전체 사이트 구조</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="stats-section">
+        <h2 class="stats-title">검색엔진 최적화</h2>
+        <p style="color: rgba(255, 255, 255, 0.7); margin: 0;">
+          본 사이트맵은 검색엔진이 MUMULAB의 모든 페이지를 효율적으로 크롤링할 수 있도록 
+          구조화되어 있습니다. 모든 페이지는 적절한 메타데이터와 구조화된 데이터를 포함하고 있으며, 
+          Google Analytics를 통해 사용자 행동을 분석하고 개선하고 있습니다.
+        </p>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        if (window.Analytics) {
+          Analytics.trackPageView('Sitemap', 'info');
+        }
+      });
+    </script>
+  </body>
+</html>

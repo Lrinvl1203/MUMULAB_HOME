@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MUMULAB - 개인정보처리방침</title>
+    <link rel="stylesheet" href="../style.css" />
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-R96NX2MK78"></script>
+    <script src="../analytics.js"></script>
+    <style>
+      body { background: var(--bg-primary); color: var(--text-primary); user-select: text; overflow: auto; }
+      .container { max-width: 800px; margin: 96px auto 64px; padding: 0 24px; line-height: 1.7; }
+
+      /* Modern Header Navigation */
+      .header { 
+        position: fixed; 
+        top: 0; 
+        left: 0; 
+        right: 0; 
+        height: 72px; 
+        background: rgba(10, 10, 10, 0.95); 
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
+        z-index: 100; 
+        display: flex; 
+        align-items: center;
+        backdrop-filter: blur(20px);
+      }
+      
+      .header-inner { 
+        display: flex; 
+        align-items: center; 
+        justify-content: space-between; 
+        gap: 24px; 
+        height: 100%; 
+        padding: 0 24px; 
+        max-width: 1200px; 
+        margin: 0 auto; 
+        width: 100%; 
+      }
+      
+      .brand { 
+        font-weight: 800; 
+        letter-spacing: 0.12em; 
+        font-size: 20px;
+        text-indent: 0.12em;
+      }
+      
+      .brand a { 
+        color: #ffffff; 
+        text-decoration: none;
+        transition: opacity 0.3s ease;
+      }
+
+      .brand a:hover {
+        opacity: 0.8;
+      }
+      
+      .nav-pills { 
+        display: flex; 
+        gap: 16px;
+        align-items: center;
+      }
+      
+      .nav-pill {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 20px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        text-decoration: none;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .nav-pill::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.6s;
+      }
+
+      .nav-pill:hover::before {
+        left: 100%;
+      }
+
+      .nav-pill:hover {
+        transform: translateY(-2px);
+        border-color: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      }
+
+      .nav-pill.active {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+      }
+
+      .nav-pill-icon {
+        font-size: 16px;
+        opacity: 0.8;
+      }
+
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        font-size: 14px;
+        margin-bottom: 32px;
+        transition: color 0.3s ease;
+      }
+
+      .back-link:hover {
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .page-title {
+        font-size: 36px;
+        font-weight: 700;
+        margin-bottom: 16px;
+        color: rgba(255, 255, 255, 0.95);
+      }
+
+      .last-updated {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 14px;
+        margin-bottom: 48px;
+      }
+
+      .content h2 {
+        font-size: 24px;
+        font-weight: 600;
+        margin: 48px 0 24px 0;
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .content h3 {
+        font-size: 20px;
+        font-weight: 600;
+        margin: 32px 0 16px 0;
+        color: rgba(255, 255, 255, 0.85);
+      }
+
+      .content p {
+        margin-bottom: 16px;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .content ul {
+        margin-bottom: 16px;
+        padding-left: 20px;
+      }
+
+      .content li {
+        margin-bottom: 8px;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .content strong {
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      @media (max-width: 768px) {
+        .header-inner {
+          padding: 0 16px;
+          gap: 16px;
+        }
+        
+        .nav-pills {
+          gap: 8px;
+        }
+        
+        .nav-pill {
+          padding: 10px 16px;
+          font-size: 13px;
+        }
+        
+        .brand {
+          font-size: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body class="theme-dark">
+    <header class="header">
+      <div class="header-inner">
+        <div class="brand">
+          <a href="../app.html">MUMULAB</a>
+        </div>
+        <nav class="nav-pills">
+          <a href="../blog/index.html" class="nav-pill">
+            <div class="nav-pill-icon">📝</div>
+            블로그
+          </a>
+          <a href="../tools/index.html" class="nav-pill">
+            <div class="nav-pill-icon">🛠️</div>
+            도구
+          </a>
+          <a href="./index.html" class="nav-pill active">
+            <div class="nav-pill-icon">ℹ️</div>
+            정보
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container">
+      <a href="index.html" class="back-link">
+        ← 서비스 정보로 돌아가기
+      </a>
+
+      <h1 class="page-title">개인정보처리방침</h1>
+      <p class="last-updated">최종 업데이트: 2024년 1월 15일</p>
+
+      <div class="content">
+        <h2>1. 개인정보처리방침 개요</h2>
+        <p>MUMULAB은 사용자의 개인정보 보호를 매우 중요하게 생각합니다. 본 개인정보처리방침은 MUMULAB 웹사이트(이하 "서비스")를 이용하시는 과정에서 수집, 이용, 보관, 파기되는 개인정보의 처리에 관한 사항을 설명합니다.</p>
+
+        <h2>2. 수집하는 개인정보의 항목</h2>
+        <h3>2.1 자동 수집 정보</h3>
+        <ul>
+          <li><strong>웹사이트 이용 정보:</strong> IP 주소, 쿠키, 방문 페이지, 체류 시간, 접속 로그</li>
+          <li><strong>기기 정보:</strong> 운영체제, 브라우저 유형 및 버전, 화면 해상도</li>
+          <li><strong>분석 데이터:</strong> Google Analytics를 통한 웹사이트 이용 패턴 분석</li>
+        </ul>
+
+        <h3>2.2 직접 제공 정보</h3>
+        <ul>
+          <li><strong>문의사항:</strong> 연락처, 문의 내용 (사용자가 직접 제공하는 경우)</li>
+        </ul>
+
+        <h2>3. 개인정보의 처리 목적</h2>
+        <p>수집된 개인정보는 다음 목적으로만 이용됩니다:</p>
+        <ul>
+          <li>웹사이트 서비스 제공 및 운영</li>
+          <li>사용자 경험 개선을 위한 웹사이트 분석</li>
+          <li>서비스 품질 향상 및 콘텐츠 개발</li>
+          <li>법적 의무 이행 및 서비스 보안 유지</li>
+        </ul>
+
+        <h2>4. 개인정보의 처리 및 보유기간</h2>
+        <ul>
+          <li><strong>웹사이트 이용 로그:</strong> 6개월</li>
+          <li><strong>Google Analytics 데이터:</strong> 26개월 (Google 정책에 따름)</li>
+          <li><strong>문의사항 및 연락처:</strong> 3년 (처리 완료 후)</li>
+        </ul>
+
+        <h2>5. 개인정보의 제3자 제공</h2>
+        <p>MUMULAB은 원칙적으로 사용자의 개인정보를 제3자에게 제공하지 않습니다. 다만, 다음의 경우에는 예외로 합니다:</p>
+        <ul>
+          <li>사용자가 사전에 동의한 경우</li>
+          <li>법령의 규정에 의하거나, 수사 목적으로 법령에 정해진 절차와 방법에 따라 수사기관의 요구가 있는 경우</li>
+        </ul>
+
+        <h2>6. 개인정보 처리의 위탁</h2>
+        <p>더 나은 서비스 제공을 위해 다음과 같은 업체에 개인정보 처리를 위탁합니다:</p>
+        <ul>
+          <li><strong>Google Analytics:</strong> 웹사이트 이용 현황 분석</li>
+          <li><strong>Netlify:</strong> 웹사이트 호스팅 및 운영</li>
+        </ul>
+
+        <h2>7. 개인정보의 파기</h2>
+        <p>개인정보 보유기간의 경과, 처리목적 달성 등 개인정보가 불필요하게 되었을 때에는 지체없이 해당 개인정보를 파기합니다.</p>
+
+        <h2>8. 정보주체의 권리</h2>
+        <p>사용자는 다음과 같은 권리를 가집니다:</p>
+        <ul>
+          <li>개인정보 처리현황에 대한 열람 요구</li>
+          <li>개인정보 처리정지 요구</li>
+          <li>개인정보 정정·삭제 요구</li>
+          <li>손해배상 청구</li>
+        </ul>
+
+        <h2>9. 개인정보 보호책임자</h2>
+        <p>개인정보 처리에 관한 업무를 총괄해서 책임지고, 개인정보 처리와 관련한 정보주체의 불만처리 및 피해구제를 처리하기 위하여 아래와 같이 개인정보 보호책임자를 지정하고 있습니다.</p>
+        <ul>
+          <li><strong>개인정보 보호책임자:</strong> MUMULAB 운영진</li>
+          <li><strong>연락처:</strong> 연락처 페이지를 통해 문의</li>
+        </ul>
+
+        <h2>10. 쿠키 정책</h2>
+        <p>MUMULAB은 다음과 같은 목적으로 쿠키를 사용합니다:</p>
+        <ul>
+          <li>웹사이트 이용 현황 분석</li>
+          <li>사용자 설정 저장</li>
+          <li>서비스 품질 향상</li>
+        </ul>
+        <p>사용자는 브라우저 설정을 통해 쿠키 허용 여부를 선택할 수 있습니다.</p>
+
+        <h2>11. 개인정보처리방침의 변경</h2>
+        <p>본 개인정보처리방침은 관련 법령 및 지침의 변경이나 내부 운영방침의 변경에 따라 개정될 수 있습니다. 변경사항이 있을 경우 웹사이트를 통해 공지하겠습니다.</p>
+
+        <h2>12. 문의처</h2>
+        <p>개인정보 처리에 관한 문의사항이 있으시면 연락처 페이지를 통해 연락 주시기 바랍니다.</p>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        if (window.Analytics) {
+          Analytics.trackPageView('Privacy Policy', 'policy');
+        }
+      });
+    </script>
+  </body>
+</html>

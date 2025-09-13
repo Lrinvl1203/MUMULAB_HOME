@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MUMULAB - 소개 및 연락처</title>
+    <link rel="stylesheet" href="../style.css" />
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-R96NX2MK78"></script>
+    <script src="../analytics.js"></script>
+    <style>
+      body { background: var(--bg-primary); color: var(--text-primary); user-select: text; overflow: auto; }
+      .container { max-width: 800px; margin: 96px auto 64px; padding: 0 24px; line-height: 1.7; }
+
+      /* Modern Header Navigation */
+      .header { 
+        position: fixed; 
+        top: 0; 
+        left: 0; 
+        right: 0; 
+        height: 72px; 
+        background: rgba(10, 10, 10, 0.95); 
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
+        z-index: 100; 
+        display: flex; 
+        align-items: center;
+        backdrop-filter: blur(20px);
+      }
+      
+      .header-inner { 
+        display: flex; 
+        align-items: center; 
+        justify-content: space-between; 
+        gap: 24px; 
+        height: 100%; 
+        padding: 0 24px; 
+        max-width: 1200px; 
+        margin: 0 auto; 
+        width: 100%; 
+      }
+      
+      .brand { 
+        font-weight: 800; 
+        letter-spacing: 0.12em; 
+        font-size: 20px;
+        text-indent: 0.12em;
+      }
+      
+      .brand a { 
+        color: #ffffff; 
+        text-decoration: none;
+        transition: opacity 0.3s ease;
+      }
+
+      .brand a:hover {
+        opacity: 0.8;
+      }
+      
+      .nav-pills { 
+        display: flex; 
+        gap: 16px;
+        align-items: center;
+      }
+      
+      .nav-pill {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 20px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        text-decoration: none;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .nav-pill::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.6s;
+      }
+
+      .nav-pill:hover::before {
+        left: 100%;
+      }
+
+      .nav-pill:hover {
+        transform: translateY(-2px);
+        border-color: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      }
+
+      .nav-pill.active {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+      }
+
+      .nav-pill-icon {
+        font-size: 16px;
+        opacity: 0.8;
+      }
+
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        font-size: 14px;
+        margin-bottom: 32px;
+        transition: color 0.3s ease;
+      }
+
+      .back-link:hover {
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .page-title {
+        font-size: 36px;
+        font-weight: 700;
+        margin-bottom: 48px;
+        color: rgba(255, 255, 255, 0.95);
+        text-align: center;
+      }
+
+      .intro-section {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 40px 32px;
+        margin-bottom: 48px;
+        backdrop-filter: blur(10px);
+      }
+
+      .intro-title {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 24px;
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .content h2 {
+        font-size: 24px;
+        font-weight: 600;
+        margin: 48px 0 24px 0;
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .content h3 {
+        font-size: 20px;
+        font-weight: 600;
+        margin: 32px 0 16px 0;
+        color: rgba(255, 255, 255, 0.85);
+      }
+
+      .content p {
+        margin-bottom: 16px;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .content ul {
+        margin-bottom: 16px;
+        padding-left: 20px;
+      }
+
+      .content li {
+        margin-bottom: 8px;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .content strong {
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .contact-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 24px;
+        margin-top: 32px;
+      }
+
+      .contact-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 32px 24px;
+        backdrop-filter: blur(10px);
+      }
+
+      .contact-card h3 {
+        margin-top: 0;
+        margin-bottom: 16px;
+      }
+
+      .highlight-box {
+        background: rgba(139, 92, 246, 0.1);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        border-radius: 12px;
+        padding: 24px;
+        margin: 32px 0;
+      }
+
+      @media (max-width: 768px) {
+        .header-inner {
+          padding: 0 16px;
+          gap: 16px;
+        }
+        
+        .nav-pills {
+          gap: 8px;
+        }
+        
+        .nav-pill {
+          padding: 10px 16px;
+          font-size: 13px;
+        }
+        
+        .brand {
+          font-size: 18px;
+        }
+
+        .contact-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .intro-section {
+          padding: 24px 20px;
+        }
+      }
+    </style>
+  </head>
+  <body class="theme-dark">
+    <header class="header">
+      <div class="header-inner">
+        <div class="brand">
+          <a href="../app.html">MUMULAB</a>
+        </div>
+        <nav class="nav-pills">
+          <a href="../blog/index.html" class="nav-pill">
+            <div class="nav-pill-icon">📝</div>
+            블로그
+          </a>
+          <a href="../tools/index.html" class="nav-pill">
+            <div class="nav-pill-icon">🛠️</div>
+            도구
+          </a>
+          <a href="./index.html" class="nav-pill active">
+            <div class="nav-pill-icon">ℹ️</div>
+            정보
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container">
+      <a href="index.html" class="back-link">
+        ← 서비스 정보로 돌아가기
+      </a>
+
+      <h1 class="page-title">소개 및 연락처</h1>
+
+      <div class="intro-section">
+        <h2 class="intro-title">MUMULAB이란?</h2>
+        <p><strong>MUMULAB</strong>은 "아이디어부터 실현까지, 생산성 극대화"를 모토로 하는 AI 기반 창작 플랫폼입니다.</p>
+        <p>우리는 창작자들이 더 효율적으로 작업할 수 있도록 돕는 다양한 AI 도구와 서비스를 제공합니다. 블로그 글쓰기부터 콘텐츠 분석까지, 창의적 작업의 모든 단계를 지원하는 통합 생태계를 구축하고 있습니다.</p>
+      </div>
+
+      <div class="content">
+        <h2>우리의 미션</h2>
+        <div class="highlight-box">
+          <p><strong>"Live longer with AI"</strong> - AI와 함께 더 오래, 더 의미 있는 창작 활동을 지속할 수 있도록 돕습니다.</p>
+        </div>
+
+        <h2>제공 서비스</h2>
+        <ul>
+          <li><strong>AI 블로그 글쓰기:</strong> 아이디어를 완성도 높은 블로그 포스트로 변환</li>
+          <li><strong>사진 기반 콘텐츠 생성:</strong> 이미지 한 장으로 완전한 블로그 포스트 작성</li>
+          <li><strong>YouTube 분석 도구:</strong> 채널 성과 분석 및 최적화 도구</li>
+          <li><strong>콘텐츠 큐레이션:</strong> 창작에 필요한 인사이트와 트렌드 정보 제공</li>
+        </ul>
+
+        <h2>운영진 정보</h2>
+        <div class="contact-grid">
+          <div class="contact-card">
+            <h3>개발 및 운영</h3>
+            <p><strong>MUMULAB 팀</strong></p>
+            <p>AI 기반 생산성 도구 개발<br>
+            웹 서비스 기획 및 운영<br>
+            사용자 경험 최적화</p>
+          </div>
+          
+          <div class="contact-card">
+            <h3>서비스 지역</h3>
+            <p><strong>대한민국</strong></p>
+            <p>한국어 우선 지원<br>
+            한국 사용자 맞춤 서비스<br>
+            현지화된 AI 모델 활용</p>
+          </div>
+        </div>
+
+        <h2>연락 방법</h2>
+        <p>서비스 이용 중 문의사항이나 개선 제안이 있으시면 다음 방법으로 연락해 주세요:</p>
+        
+        <div class="contact-grid">
+          <div class="contact-card">
+            <h3>📧 일반 문의</h3>
+            <p>서비스 이용, 기능 문의, 제안사항</p>
+            <p>GitHub Issues를 통한 공개 문의 권장</p>
+          </div>
+          
+          <div class="contact-card">
+            <h3>🛡️ 개인정보 관련</h3>
+            <p>개인정보 처리, 데이터 삭제 요청</p>
+            <p>개인정보보호 관련 문의</p>
+          </div>
+        </div>
+
+        <h2>기술 스택</h2>
+        <ul>
+          <li><strong>Frontend:</strong> HTML, CSS, JavaScript (Vanilla)</li>
+          <li><strong>AI/ML:</strong> Google Gemini, OpenAI GPT, Anthropic Claude</li>
+          <li><strong>Analytics:</strong> Google Analytics 4</li>
+          <li><strong>Hosting:</strong> Netlify</li>
+          <li><strong>Version Control:</strong> Git, GitHub</li>
+        </ul>
+
+        <h2>서비스 철학</h2>
+        <p>MUMULAB은 다음 가치를 중심으로 서비스를 제공합니다:</p>
+        <ul>
+          <li><strong>사용자 중심:</strong> 사용자의 생산성과 창의성 향상을 최우선으로 합니다</li>
+          <li><strong>투명성:</strong> 서비스 운영과 데이터 처리에 대해 투명하게 공개합니다</li>
+          <li><strong>지속 가능성:</strong> 장기적으로 지속 가능한 서비스 모델을 추구합니다</li>
+          <li><strong>혁신:</strong> AI 기술의 발전에 따라 지속적으로 서비스를 개선합니다</li>
+          <li><strong>접근성:</strong> 모든 사용자가 쉽게 접근할 수 있는 서비스를 만듭니다</li>
+        </ul>
+
+        <h2>향후 계획</h2>
+        <p>MUMULAB은 다음과 같은 발전 계획을 가지고 있습니다:</p>
+        <ul>
+          <li>더 많은 AI 생산성 도구 추가</li>
+          <li>사용자 맞춤형 추천 시스템 구축</li>
+          <li>모바일 앱 개발</li>
+          <li>다국어 지원 확대</li>
+          <li>API 서비스 제공</li>
+        </ul>
+
+        <div class="highlight-box">
+          <p><strong>함께 성장하는 플랫폼</strong></p>
+          <p>MUMULAB은 사용자의 피드백을 바탕으로 지속적으로 발전하고 있습니다. 여러분의 소중한 의견과 제안을 기다립니다.</p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        if (window.Analytics) {
+          Analytics.trackPageView('About & Contact', 'info');
+        }
+      });
+    </script>
+  </body>
+</html>
