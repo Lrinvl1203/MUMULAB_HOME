@@ -11,7 +11,7 @@
     <script src="../analytics.js"></script>
     <style>
       body { background: var(--bg-primary); color: var(--text-primary); user-select: text; overflow: auto; }
-      .container { max-width: 1080px; margin: 72px auto 64px; padding: 0 24px; }
+      .container { max-width: 1080px; margin: 96px auto 64px; padding: 0 24px; }
       .page-title { font-size: 32px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
       .page-subtitle { color: var(--text-secondary); margin-bottom: 32px; font-size: 18px; }
       
@@ -97,90 +97,126 @@
         color: white;
       }
 
+      /* Modern Header Navigation */
       .header { 
         position: fixed; 
         top: 0; 
         left: 0; 
         right: 0; 
-        height: 56px; 
-        background: var(--bg-primary); 
-        border-bottom: 1px solid var(--border-primary); 
-        z-index: 10; 
+        height: 72px; 
+        background: rgba(10, 10, 10, 0.95); 
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
+        z-index: 100; 
         display: flex; 
-        align-items: center; 
+        align-items: center;
+        backdrop-filter: blur(20px);
       }
       
       .header-inner { 
         display: flex; 
         align-items: center; 
         justify-content: space-between; 
-        gap: 12px; 
+        gap: 24px; 
         height: 100%; 
-        padding: 0 16px; 
+        padding: 0 24px; 
         max-width: 1200px; 
         margin: 0 auto; 
         width: 100%; 
       }
       
       .brand { 
-        font-weight: 600; 
-        letter-spacing: -0.01em; 
-        font-size: 18px;
+        font-weight: 800; 
+        letter-spacing: 0.12em; 
+        font-size: 20px;
+        text-indent: 0.12em;
       }
       
       .brand a { 
-        color: var(--text-primary); 
-        text-decoration: none; 
+        color: #ffffff; 
+        text-decoration: none;
+        transition: opacity 0.3s ease;
+      }
+
+      .brand a:hover {
+        opacity: 0.8;
       }
       
-      .nav-links { 
+      .nav-pills { 
         display: flex; 
-        gap: 24px; 
+        gap: 16px;
+        align-items: center;
       }
       
-      .nav-links a { 
-        color: var(--text-secondary); 
-        text-decoration: none; 
-        font-size: 14px; 
-        transition: color 0.2s ease;
-      }
-      
-      .nav-links a:hover { 
-        color: var(--accent-primary); 
-      }
-      
-      .dropdown {
+      .nav-pill {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 20px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        text-decoration: none;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        backdrop-filter: blur(10px);
         position: relative;
+        overflow: hidden;
       }
-      
-      .dropdown-menu {
-        display: none;
+
+      .nav-pill::before {
+        content: '';
         position: absolute;
-        top: 100%;
-        left: 0;
-        background: var(--bg-elevated);
-        border: 1px solid var(--border-primary);
-        border-radius: var(--radius-md);
-        padding: 8px 0;
-        min-width: 160px;
-        box-shadow: var(--shadow-lg);
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.6s;
       }
-      
-      .dropdown:hover .dropdown-menu {
-        display: block;
+
+      .nav-pill:hover::before {
+        left: 100%;
       }
-      
-      .dropdown-menu a {
-        display: block;
-        padding: 8px 16px;
-        color: var(--text-primary);
-        font-size: 13px;
-        transition: background-color 0.2s ease;
+
+      .nav-pill:hover {
+        transform: translateY(-2px);
+        border-color: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
       }
-      
-      .dropdown-menu a:hover {
-        background: var(--bg-tertiary);
-        color: var(--accent-primary);
+
+      .nav-pill.active {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+      }
+
+      .nav-pill-icon {
+        font-size: 16px;
+        opacity: 0.8;
+      }
+
+      @media (max-width: 768px) {
+        .header-inner {
+          padding: 0 16px;
+          gap: 16px;
+        }
+        
+        .nav-pills {
+          gap: 8px;
+        }
+        
+        .nav-pill {
+          padding: 10px 16px;
+          font-size: 13px;
+        }
+        
+        .brand {
+          font-size: 18px;
+        }
       }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -191,17 +227,15 @@
         <div class="brand">
           <a href="../app.html">MUMULAB</a>
         </div>
-        <nav class="nav-links">
-          <a href="../tools/index.html">도구</a>
-          <div class="dropdown">
-            <a href="./index.html" style="color: var(--accent-primary);">블로그</a>
-            <div class="dropdown-menu">
-              <a href="./index.html">전체 글</a>
-              <a href="./index.html?category=tech">기술</a>
-              <a href="./index.html?category=business">비즈니스</a>
-              <a href="./index.html?category=life">일상</a>
-            </div>
-          </div>
+        <nav class="nav-pills">
+          <a href="./index.html" class="nav-pill active">
+            <div class="nav-pill-icon">📝</div>
+            블로그
+          </a>
+          <a href="../tools/index.html" class="nav-pill">
+            <div class="nav-pill-icon">🛠️</div>
+            도구
+          </a>
         </nav>
       </div>
     </header>
