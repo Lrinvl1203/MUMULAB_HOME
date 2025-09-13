@@ -205,84 +205,6 @@
         font-weight: 400;
       }
 
-      /* Features Section */
-      .features {
-        padding: 80px 24px 120px;
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-
-      .features-header {
-        text-align: center;
-        margin-bottom: 80px;
-      }
-
-      .features-title {
-        font-size: clamp(2rem, 4vw, 3rem);
-        font-weight: 300;
-        margin-bottom: 16px;
-        color: rgba(255, 255, 255, 0.9);
-      }
-
-      .features-subtitle {
-        font-size: 18px;
-        color: rgba(255, 255, 255, 0.5);
-        font-weight: 300;
-      }
-
-      .features-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-        gap: 32px;
-      }
-
-      .feature-card {
-        background: rgba(255, 255, 255, 0.01);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        border-radius: 20px;
-        padding: 40px 32px;
-        text-align: left;
-        backdrop-filter: blur(20px);
-        transition: all 0.4s ease;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .feature-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-      }
-
-      .feature-card:hover {
-        transform: translateY(-8px);
-        border-color: rgba(255, 255, 255, 0.1);
-        background: rgba(255, 255, 255, 0.02);
-        box-shadow: 0 32px 64px rgba(0, 0, 0, 0.2);
-      }
-
-      .feature-icon {
-        font-size: 32px;
-        margin-bottom: 20px;
-        opacity: 0.8;
-      }
-
-      .feature-title {
-        font-size: 20px;
-        font-weight: 600;
-        margin-bottom: 12px;
-        color: rgba(255, 255, 255, 0.95);
-      }
-
-      .feature-description {
-        color: rgba(255, 255, 255, 0.6);
-        line-height: 1.7;
-        font-weight: 300;
-      }
 
       /* Responsive */
       @media (max-width: 768px) {
@@ -299,32 +221,11 @@
         .nav-pill {
           min-width: 280px;
         }
-
-        .features {
-          padding: 60px 24px 80px;
-        }
-
-        .features-header {
-          margin-bottom: 60px;
-        }
-
-        .features-grid {
-          grid-template-columns: 1fr;
-          gap: 24px;
-        }
       }
 
       @media (max-width: 480px) {
         .hero {
           min-height: 65vh;
-        }
-
-        .features {
-          padding: 40px 16px 60px;
-        }
-
-        .features-header {
-          margin-bottom: 40px;
         }
       }
     </style>
@@ -366,42 +267,6 @@
         </div>
       </section>
 
-      <!-- Features Section -->
-      <section class="features">
-        <div class="features-header">
-          <h2 class="features-title">Creative Ecosystem</h2>
-          <p class="features-subtitle">창작자를 위한 통합 플랫폼</p>
-        </div>
-
-        <div class="features-grid">
-          <div class="feature-card">
-            <div class="feature-icon">🎨</div>
-            <h3 class="feature-title">Creative Writing</h3>
-            <p class="feature-description">
-              AI 기반 글쓰기 도구로 아이디어를 완성도 높은 콘텐츠로 변환합니다.
-              창의성과 효율성의 완벽한 조화를 경험하세요.
-            </p>
-          </div>
-          
-          <div class="feature-card">
-            <div class="feature-icon">⚡</div>
-            <h3 class="feature-title">Smart Automation</h3>
-            <p class="feature-description">
-              반복적인 작업을 자동화하여 창작에만 집중할 수 있도록 돕습니다.
-              워크플로우를 혁신적으로 개선하세요.
-            </p>
-          </div>
-          
-          <div class="feature-card">
-            <div class="feature-icon">🌐</div>
-            <h3 class="feature-title">Connected Platform</h3>
-            <p class="feature-description">
-              블로그, 도구, 프로젝트 관리가 하나의 생태계에서 seamlessly 연결됩니다.
-              통합된 경험을 제공합니다.
-            </p>
-          </div>
-        </div>
-      </section>
     </div>
 
     <script>
