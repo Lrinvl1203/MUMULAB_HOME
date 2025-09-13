@@ -84,13 +84,13 @@
       /* Hero Section */
       .hero {
         position: relative;
-        min-height: 80vh;
+        min-height: 60vh;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         text-align: center;
-        padding: 0 24px;
+        padding: 40px 24px;
       }
 
       .hero-content {
@@ -207,7 +207,7 @@
 
       /* Features Section */
       .features {
-        padding: 120px 24px;
+        padding: 80px 24px 120px;
         max-width: 1200px;
         margin: 0 auto;
       }
@@ -286,6 +286,11 @@
 
       /* Responsive */
       @media (max-width: 768px) {
+        .hero {
+          min-height: 70vh;
+          padding: 20px 24px;
+        }
+
         .nav-pills {
           flex-direction: column;
           align-items: center;
@@ -295,8 +300,31 @@
           min-width: 280px;
         }
 
+        .features {
+          padding: 60px 24px 80px;
+        }
+
+        .features-header {
+          margin-bottom: 60px;
+        }
+
         .features-grid {
           grid-template-columns: 1fr;
+          gap: 24px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .hero {
+          min-height: 65vh;
+        }
+
+        .features {
+          padding: 40px 16px 60px;
+        }
+
+        .features-header {
+          margin-bottom: 40px;
         }
       }
     </style>
@@ -309,12 +337,12 @@
       <!-- Hero Section -->
       <section class="hero">
         <div class="hero-content">
-          <div class="hero-badge">✨ AI-Powered Creative Platform</div>
+          <div class="hero-badge">✨ Live longer with AI</div>
           
           <h1 class="hero-title">MUMULAB</h1>
           
           <p class="hero-subtitle">
-            아이디어부터 실현까지, 창의적 작업을 위한 미니멀한 공간
+            아이디어부터 실현까지, 생산성 극대화
           </p>
 
           <!-- Navigation Pills -->
