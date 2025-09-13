@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>MUMULAB Blog</title>
     <link rel="stylesheet" href="../style.css" />
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-R96NX2MK78"></script>
+    <script src="../analytics.js"></script>
     <style>
       body { background: var(--bg-primary); color: var(--text-primary); user-select: text; overflow: auto; }
       .container { max-width: 1080px; margin: 72px auto 64px; padding: 0 24px; }
@@ -308,6 +312,11 @@
 
       // 이벤트 리스너 등록
       document.addEventListener('DOMContentLoaded', function() {
+        // Track blog page view
+        if (window.Analytics) {
+          Analytics.trackPageView('MUMULAB Blog', 'blog');
+        }
+
         // 초기 로드
         filterPosts('all');
 
@@ -316,8 +325,26 @@
           btn.addEventListener('click', (e) => {
             e.preventDefault();
             const category = btn.dataset.category;
+            
+            // Track blog category filter
+            if (window.Analytics) {
+              Analytics.trackBlogInteraction('filter', '', category);
+            }
+            
             filterPosts(category);
           });
+        });
+
+        // Track blog post clicks
+        document.addEventListener('click', (e) => {
+          if (e.target.classList.contains('read-more') || e.target.closest('.post-title a')) {
+            const postCard = e.target.closest('.post-card');
+            const postTitle = postCard.querySelector('.post-title a').textContent;
+            
+            if (window.Analytics) {
+              Analytics.trackBlogInteraction('read_more', postTitle);
+            }
+          }
         });
       });
     </script>

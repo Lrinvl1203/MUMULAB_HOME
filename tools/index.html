@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>MUMULAB Tools - 생산성 도구 모음</title>
     <link rel="stylesheet" href="../style.css" />
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-R96NX2MK78"></script>
+    <script src="../analytics.js"></script>
     <style>
       body { 
         background: var(--bg-primary); 
@@ -413,6 +417,12 @@
         currentApp = app;
         currentAppTitle.textContent = app.name;
         
+        // Track app launch
+        if (window.Analytics) {
+          Analytics.trackAppLaunch(app.name, 'inline');
+          Analytics.trackToolUsage(app.name, 'open');
+        }
+        
         // 뷰 전환
         appGrid.style.display = 'none';
         appViewer.style.display = 'block';
@@ -426,11 +436,24 @@
         appIframe.onload = () => {
           loadingIndicator.style.display = 'none';
           appIframe.style.display = 'block';
+          
+          // Track successful app load
+          if (window.Analytics) {
+            Analytics.trackCustomEvent('app_loaded', {
+              app_name: app.name,
+              load_time: new Date().toISOString()
+            });
+          }
         };
       }
 
       // 앱 리스트로 돌아가기
       function backToAppList() {
+        // Track app close
+        if (currentApp && window.Analytics) {
+          Analytics.trackToolUsage(currentApp.name, 'close');
+        }
+        
         appViewer.style.display = 'none';
         appGrid.style.display = 'grid';
         currentApp = null;
@@ -440,6 +463,14 @@
       // 전체 페이지로 열기
       function openFullscreen() {
         if (currentApp) {
+          // Track fullscreen launch
+          if (window.Analytics) {
+            Analytics.trackAppLaunch(currentApp.name, 'fullscreen');
+            Analytics.trackCustomEvent('fullscreen_open', {
+              app_name: currentApp.name
+            });
+          }
+          
           window.open(currentApp.url, '_blank');
         }
       }
@@ -489,6 +520,11 @@
 
       // 이벤트 리스너 등록
       document.addEventListener('DOMContentLoaded', () => {
+        // Track tools page view
+        if (window.Analytics) {
+          Analytics.trackPageView('MUMULAB Tools', 'tools');
+        }
+        
         renderApps();
         
         // 뒤로 가기 버튼

@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>MUMULAB - 프로젝트 관리 플랫폼</title>
     <link rel="stylesheet" href="style.css" />
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-R96NX2MK78"></script>
+    <script src="analytics.js"></script>
     <style>
       body { 
         background: var(--bg-primary); 
@@ -234,5 +238,13 @@
         </div>
       </div>
     </div>
+    <script>
+      // Track homepage view
+      document.addEventListener('DOMContentLoaded', () => {
+        if (window.Analytics) {
+          Analytics.trackPageView('MUMULAB Homepage', 'homepage');
+        }
+      });
+    </script>
   </body>
 </html>
