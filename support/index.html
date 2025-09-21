@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="google-site-verification" content="cYiblLEajvF4LB0I3dg6Iosk0f8JFisXszKgaJEHFzs" />
+    <title>MUMULAB - 구독 & 후원</title>
+    <link rel="stylesheet" href="../style.css" />
+
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-R96NX2MK78"></script>
+    <script src="../analytics.js"></script>
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1818115573259604"
+         crossorigin="anonymous"></script>
+    <style>
+      body {
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        user-select: text;
+        overflow: auto;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 96px auto 64px;
+        padding: 0 24px;
+      }
+
+      .page-header {
+        text-align: center;
+        margin-bottom: 32px;
+      }
+
+      .page-title {
+        font-size: 36px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, #ff69b4 0%, #ff1493 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .page-subtitle {
+        font-size: 18px;
+        color: var(--text-secondary);
+      }
+
+      /* Modern Header Navigation */
+      .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 72px;
+        background: rgba(10, 10, 10, 0.95);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        backdrop-filter: blur(20px);
+      }
+
+      .header-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        height: 100%;
+        padding: 0 24px;
+        max-width: 1200px;
+        margin: 0 auto;
+        width: 100%;
+      }
+
+      .brand {
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        font-size: 20px;
+        text-indent: 0.12em;
+      }
+
+      .brand a {
+        color: #ffffff;
+        text-decoration: none;
+        transition: opacity 0.3s ease;
+      }
+
+      .brand a:hover {
+        opacity: 0.8;
+      }
+
+      .nav-pills {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+      }
+
+      .nav-pill {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 20px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        text-decoration: none;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .nav-pill::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.6s;
+      }
+
+      .nav-pill:hover::before {
+        left: 100%;
+      }
+
+      .nav-pill:hover {
+        transform: translateY(-2px);
+        border-color: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      }
+
+      .nav-pill.active {
+        background: linear-gradient(135deg, rgba(255, 105, 180, 0.15) 0%, rgba(255, 20, 147, 0.15) 100%);
+        border: 2px solid rgba(255, 105, 180, 0.3);
+        color: #ffffff;
+        box-shadow: 0 8px 32px rgba(255, 105, 180, 0.2);
+      }
+
+      .nav-pill-icon {
+        font-size: 16px;
+        opacity: 0.8;
+      }
+
+      .nav-pill.active .nav-pill-icon {
+        filter: drop-shadow(0 2px 8px rgba(255, 105, 180, 0.3));
+        animation: heartbeat 2s ease-in-out infinite;
+      }
+
+      @keyframes heartbeat {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+      }
+
+      @media (max-width: 768px) {
+        .header-inner {
+          padding: 0 16px;
+          gap: 16px;
+        }
+
+        .nav-pills {
+          gap: 8px;
+        }
+
+        .nav-pill {
+          padding: 10px 16px;
+          font-size: 13px;
+        }
+
+        .brand {
+          font-size: 18px;
+        }
+      }
+
+      /* Support Content */
+      .support-content {
+        position: relative;
+        width: 100%;
+        height: calc(100vh - 200px);
+        min-height: 600px;
+        border: 1px solid var(--border-primary);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        background: var(--bg-secondary);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      }
+
+      .loading-indicator {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        z-index: 10;
+      }
+
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid var(--border-primary);
+        border-top: 4px solid #ff69b4;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 16px;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      .loading-indicator p {
+        color: var(--text-secondary);
+        margin: 0;
+      }
+
+      #support-iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        background: white;
+      }
+
+      .support-info {
+        text-align: center;
+        margin-bottom: 24px;
+        padding: 20px;
+        background: linear-gradient(135deg, rgba(255, 105, 180, 0.1) 0%, rgba(255, 20, 147, 0.1) 100%);
+        border: 1px solid rgba(255, 105, 180, 0.2);
+        border-radius: 16px;
+      }
+
+      .support-info h3 {
+        color: #ff69b4;
+        margin-bottom: 8px;
+        font-size: 20px;
+      }
+
+      .support-info p {
+        color: var(--text-secondary);
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body class="theme-dark">
+    <header class="header">
+      <div class="header-inner">
+        <div class="brand">
+          <a href="../app.html">MUMULAB</a>
+        </div>
+        <nav class="nav-pills">
+          <a href="../blog/index.html" class="nav-pill">
+            <div class="nav-pill-icon">📝</div>
+            블로그
+          </a>
+          <a href="../tools/index.html" class="nav-pill">
+            <div class="nav-pill-icon">🛠️</div>
+            도구
+          </a>
+          <a href="../info/index.html" class="nav-pill">
+            <div class="nav-pill-icon">ℹ️</div>
+            정보
+          </a>
+          <a href="./index.html" class="nav-pill active">
+            <div class="nav-pill-icon">💝</div>
+            구독 & 후원
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="page-header">
+        <h1 class="page-title">구독 & 후원</h1>
+        <p class="page-subtitle">MUMULAB 프로젝트를 응원해주세요</p>
+      </div>
+
+      <div class="support-info">
+        <h3>💝 MUMULAB을 후원해주세요!</h3>
+        <p>여러분의 소중한 후원이 더 나은 도구와 서비스를 만드는 원동력이 됩니다.</p>
+      </div>
+
+      <div class="support-content">
+        <div class="loading-indicator" id="loading-indicator">
+          <div class="spinner"></div>
+          <p>후원 페이지를 로드하는 중...</p>
+        </div>
+        <iframe id="support-iframe" src="" frameborder="0"></iframe>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        // Track support page view
+        if (window.Analytics) {
+          Analytics.trackPageView('MUMULAB Support', 'support');
+          Analytics.trackCustomEvent('support_page_visit', {
+            source: 'navigation',
+            timestamp: new Date().toISOString()
+          });
+        }
+
+        // Load support iframe
+        const iframe = document.getElementById('support-iframe');
+        const loadingIndicator = document.getElementById('loading-indicator');
+
+        // Show loading indicator
+        loadingIndicator.style.display = 'block';
+        iframe.style.display = 'none';
+
+        // Load the external support page
+        iframe.src = 'https://fightingmumulab.netlify.app/';
+
+        iframe.onload = () => {
+          loadingIndicator.style.display = 'none';
+          iframe.style.display = 'block';
+
+          // Track successful iframe load
+          if (window.Analytics) {
+            Analytics.trackCustomEvent('support_iframe_loaded', {
+              url: 'https://fightingmumulab.netlify.app/',
+              load_time: new Date().toISOString()
+            });
+          }
+        };
+
+        iframe.onerror = () => {
+          loadingIndicator.innerHTML = `
+            <div style="color: #ff69b4;">
+              <h3>😅 페이지 로드 중 문제가 발생했습니다</h3>
+              <p>직접 페이지로 이동하려면 <a href="https://fightingmumulab.netlify.app/" target="_blank" style="color: #ff69b4;">여기를 클릭</a>해주세요.</p>
+            </div>
+          `;
+        };
+
+        // Enhanced navigation tracking
+        document.querySelectorAll('.nav-pill').forEach(pill => {
+          pill.addEventListener('click', (e) => {
+            const icon = e.currentTarget.querySelector('.nav-pill-icon').textContent;
+            const text = e.currentTarget.textContent.trim();
+
+            if (window.Analytics) {
+              Analytics.trackCustomEvent('navigation_click', {
+                nav_type: 'pill',
+                destination: text.toLowerCase(),
+                page: 'support',
+                icon: icon
+              });
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -210,6 +210,34 @@
         font-weight: 400;
       }
 
+      /* Support & Subscribe Button in Navigation */
+      .nav-pill.support-pill {
+        background: linear-gradient(135deg, rgba(255, 105, 180, 0.15) 0%, rgba(255, 20, 147, 0.15) 100%);
+        border: 2px solid rgba(255, 105, 180, 0.3);
+        box-shadow: 0 8px 32px rgba(255, 105, 180, 0.2);
+      }
+
+      .nav-pill.support-pill:hover {
+        transform: translateY(-6px) scale(1.02);
+        border-color: rgba(255, 105, 180, 0.6);
+        background: linear-gradient(135deg, rgba(255, 105, 180, 0.25) 0%, rgba(255, 20, 147, 0.25) 100%);
+        box-shadow: 0 25px 50px rgba(255, 105, 180, 0.4);
+      }
+
+      .nav-pill.support-pill .nav-pill-icon {
+        filter: drop-shadow(0 2px 8px rgba(255, 105, 180, 0.3));
+        animation: heartbeat 2s ease-in-out infinite;
+      }
+
+      .nav-pill.support-pill .nav-pill-title {
+        color: #ff69b4;
+        text-shadow: 0 2px 8px rgba(255, 105, 180, 0.3);
+      }
+
+      @keyframes heartbeat {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+      }
 
       /* Responsive */
       @media (max-width: 768px) {
@@ -226,6 +254,7 @@
         .nav-pill {
           min-width: 280px;
         }
+
       }
 
       @media (max-width: 480px) {
@@ -276,6 +305,14 @@
                 <div class="nav-pill-desc">서비스 & 정책</div>
               </div>
             </a>
+
+            <a href="support/index.html" class="nav-pill support-pill">
+              <div class="nav-pill-icon">💝</div>
+              <div class="nav-pill-text">
+                <div class="nav-pill-title">구독 & 후원</div>
+                <div class="nav-pill-desc">프로젝트 응원하기</div>
+              </div>
+            </a>
           </div>
         </div>
       </section>
@@ -309,12 +346,25 @@
         document.querySelectorAll('.nav-pill').forEach(pill => {
           pill.addEventListener('click', (e) => {
             const title = e.currentTarget.querySelector('.nav-pill-title').textContent;
-            if (window.Analytics) {
-              Analytics.trackCustomEvent('navigation_click', {
-                nav_type: 'pill',
-                destination: title.toLowerCase(),
-                design_version: 'minimal_gallery'
-              });
+
+            // Special tracking for support button
+            if (pill.classList.contains('support-pill')) {
+              if (window.Analytics) {
+                Analytics.trackCustomEvent('support_click', {
+                  button_type: 'nav_support_pill',
+                  action: title.toLowerCase(),
+                  destination: 'fightingmumulab.netlify.app'
+                });
+              }
+            } else {
+              // Regular navigation tracking
+              if (window.Analytics) {
+                Analytics.trackCustomEvent('navigation_click', {
+                  nav_type: 'pill',
+                  destination: title.toLowerCase(),
+                  design_version: 'minimal_gallery'
+                });
+              }
             }
           });
         });
