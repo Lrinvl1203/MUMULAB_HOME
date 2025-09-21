@@ -1,0 +1,308 @@
+name: Auto Blog Publisher
+# AI 생산성 블로그 자동 발행 워크플로우
+
+on:
+  schedule:
+    # 매일 오전 9시 (KST 18:00 UTC) 실행
+    - cron: '0 0 * * *'
+  workflow_dispatch: # 수동 실행 가능
+
+env:
+  BLOG_SERIES_INDEX: ${{ vars.BLOG_SERIES_INDEX || '0' }}
+
+jobs:
+  generate-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Install dependencies
+      run: |
+        npm init -y
+        npm install marked
+
+    - name: Generate blog post
+      id: generate
+      run: |
+        # Node.js 스크립트로 블로그 포스트 생성
+        cat > generate-post.js << 'EOF'
+        const fs = require('fs');
+        const path = require('path');
+
+        // AI 생산성 블로그 시리즈 데이터
+        const blogSeries = [
+          {
+            title: "AI로 하루 1시간 절약하기 - 일정 관리 자동화",
+            category: "시간관리",
+            content: "Google Calendar AI, Calendly, Motion 등을 활용한 스마트 일정 관리",
+            tags: ["시간관리", "일정자동화", "AI도구"],
+            difficulty: "초급"
+          },
+          {
+            title: "스마트폰으로 시작하는 AI 생산성 - 필수 앱 5선",
+            category: "모바일AI",
+            content: "Otter.ai, Grammarly, Todoist AI, Notion AI 등 모바일 AI 앱 활용법",
+            tags: ["모바일", "앱추천", "생산성"],
+            difficulty: "초급"
+          },
+          {
+            title: "AI 음성인식으로 업무 효율 10배 높이기",
+            category: "음성AI",
+            content: "Whisper, Dragon, 네이버 클로바 등을 활용한 음성 입력 및 명령",
+            tags: ["음성인식", "핸즈프리", "효율성"],
+            difficulty: "중급"
+          },
+          // ... 더 많은 주제들이 여기에 추가됨
+        ];
+
+        function generateBlogPost(topic, index) {
+          const date = new Date();
+          date.setDate(date.getDate() + index);
+
+          const content = `# ${topic.title}
+
+## 개요
+${topic.content}
+
+## 주요 기능
+- 핵심 기능 1: AI 도구의 주요 특징
+- 핵심 기능 2: 실용적 활용 방법
+- 핵심 기능 3: 생산성 향상 효과
+
+## 단계별 실행 가이드
+
+### 1단계: 준비하기
+- 필요한 도구 및 계정 설정
+- 초기 설정 방법
+
+### 2단계: 기본 활용법
+- 기본 사용법 안내
+- 주요 기능 활용 방법
+
+### 3단계: 고급 활용법
+- 심화 기능 사용법
+- 개인화 설정 방법
+
+### 4단계: 생산성 극대화
+- 다른 도구와의 연동 방법
+- 워크플로우 최적화 팁
+
+## 실제 사용 사례
+
+### 사례 1: 일반적인 상황
+- 문제 상황 설명
+- AI 도구 적용 방법
+- 결과 및 효과 측정
+
+### 사례 2: 고급 활용
+- 복잡한 상황 분석
+- 단계별 해결 과정
+- 성과 및 ROI 측정
+
+## 주의사항 및 팁
+- ⚠️ 주의해야 할 점
+- 💡 효율적 사용 팁
+- 🔧 문제 해결 방법
+
+## 마무리
+${topic.title}를 통해 일상 생산성을 크게 향상시킬 수 있습니다.
+단계별로 천천히 적용해보시고, 개인 워크플로우에 맞게 커스터마이징해보세요.
+
+---
+📚 **관련 글 추천**
+- 다음 주제 예고
+- 관련 AI 도구 소개
+
+🏷️ **태그**: ${topic.tags.join(', ')}
+📅 **업데이트**: ${date.toLocaleDateString('ko-KR')}
+`;
+
+          return {
+            title: topic.title,
+            date: date.toISOString().split('T')[0],
+            category: topic.category,
+            tags: topic.tags,
+            difficulty: topic.difficulty,
+            content: content,
+            filename: `${date.toISOString().split('T')[0]}-${topic.title.replace(/\s+/g, '-').replace(/[^\w-가-힣]/g, '')}.md`
+          };
+        }
+
+        function generateHTML(post) {
+          return `<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${post.title} - MUMULAB</title>
+    <meta name="description" content="${post.content.substring(0, 150)}...">
+    <meta name="keywords" content="AI 생산성, ${post.tags.join(', ')}">
+    <meta property="og:title" content="${post.title}">
+    <meta property="og:description" content="${post.content.substring(0, 150)}...">
+    <meta property="og:type" content="article">
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        .blog-post {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            line-height: 1.6;
+            background: #fff;
+            color: #333;
+        }
+        .post-meta {
+            color: #666;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 1rem;
+        }
+        .tags {
+            margin-top: 2rem;
+        }
+        .tag {
+            background: #f0f0f0;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            margin-right: 0.5rem;
+            font-size: 0.9rem;
+        }
+        h1, h2, h3 { color: #2563eb; }
+        h2 { border-bottom: 2px solid #e5e7eb; padding-bottom: 0.5rem; }
+        ul { margin-left: 1.5rem; margin-bottom: 1rem; }
+        li { margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+    <div class="blog-post">
+        <header>
+            <h1>${post.title}</h1>
+            <div class="post-meta">
+                <span>📅 ${new Date(post.date).toLocaleDateString('ko-KR')}</span>
+                <span>📂 ${post.category}</span>
+                <span>⭐ ${post.difficulty}</span>
+            </div>
+        </header>
+
+        <main>
+            <div class="content">
+                ${post.content.replace(/\n/g, '<br>')}
+            </div>
+
+            <div class="tags">
+                ${post.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+            </div>
+        </main>
+
+        <footer>
+            <br><hr><br>
+            <a href="../index.html">← 블로그 목록으로 돌아가기</a>
+        </footer>
+    </div>
+</body>
+</html>`;
+        }
+
+        // 현재 인덱스 가져오기
+        const currentIndex = parseInt(process.env.BLOG_SERIES_INDEX || '0');
+
+        if (currentIndex >= blogSeries.length) {
+          console.log('모든 블로그 포스트가 생성 완료되었습니다.');
+          process.exit(0);
+        }
+
+        // 포스트 생성
+        const post = generateBlogPost(blogSeries[currentIndex], currentIndex);
+        const html = generateHTML(post);
+
+        // 블로그 디렉토리 생성
+        const blogDir = path.join(__dirname, 'blog', 'posts');
+        if (!fs.existsSync(blogDir)) {
+          fs.mkdirSync(blogDir, { recursive: true });
+        }
+
+        // HTML 파일 저장
+        const htmlPath = path.join(blogDir, post.filename.replace('.md', '.html'));
+        fs.writeFileSync(htmlPath, html);
+
+        // 마크다운 파일도 저장
+        const mdPath = path.join(blogDir, post.filename);
+        fs.writeFileSync(mdPath, post.content);
+
+        console.log(`✅ 새 포스트 생성: ${post.title}`);
+        console.log(`📄 파일: ${post.filename}`);
+        console.log(`📅 날짜: ${post.date}`);
+
+        // GitHub Actions 출력 설정
+        console.log(`::set-output name=title::${post.title}`);
+        console.log(`::set-output name=filename::${post.filename.replace('.md', '.html')}`);
+        console.log(`::set-output name=next-index::${currentIndex + 1}`);
+
+        EOF
+
+        node generate-post.js
+
+    - name: Update blog index
+      run: |
+        # 블로그 인덱스 페이지 업데이트
+        echo "📝 블로그 인덱스 업데이트 중..."
+
+        # 여기에 블로그 목록 페이지 업데이트 로직 추가
+        # 예: blog/index.html에 새 포스트 링크 추가
+
+    - name: Commit and push changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add blog/posts/
+        git add blog/index.html || true
+
+        if git diff --staged --quiet; then
+          echo "변경사항이 없습니다."
+        else
+          git commit -m "🤖 자동 생성: ${{ steps.generate.outputs.title }}
+
+          - 파일: ${{ steps.generate.outputs.filename }}
+          - 시리즈: AI 생산성 향상 (${{ env.BLOG_SERIES_INDEX }}/30)
+          - 자동 생성 시간: $(date +'%Y-%m-%d %H:%M:%S')"
+
+          git push
+        fi
+
+    - name: Update series index
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const nextIndex = '${{ steps.generate.outputs.next-index }}';
+
+          await github.rest.actions.createOrUpdateRepoVariable({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            name: 'BLOG_SERIES_INDEX',
+            value: nextIndex
+          });
+
+          console.log(`📊 시리즈 인덱스 업데이트: ${nextIndex}`);
+
+    - name: Create success notification
+      if: success()
+      run: |
+        echo "✅ 성공: ${{ steps.generate.outputs.title }} 포스트가 자동 생성되었습니다!"
+        echo "📅 다음 포스트는 내일 같은 시간에 자동 생성됩니다."
+
+    - name: Handle completion
+      if: env.BLOG_SERIES_INDEX >= 30
+      run: |
+        echo "🎉 AI 생산성 블로그 시리즈 30개 모두 완성!"
+        echo "자동 스케줄러를 비활성화합니다."
+
+        # 워크플로우 비활성화 (선택적)
+        # gh workflow disable auto-blog-publisher.yml

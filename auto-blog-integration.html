@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 생산성 블로그 자동화 대시보드 - MUMULAB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .schedule-card {
+            transition: transform 0.2s;
+        }
+        .schedule-card:hover {
+            transform: translateY(-4px);
+        }
+        .progress-bar {
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- 헤더 -->
+        <header class="mb-8">
+            <h1 class="text-4xl font-bold text-center text-gray-800 mb-4">
+                🤖 AI 생산성 블로그 자동화 시스템
+            </h1>
+            <p class="text-center text-gray-600 max-w-2xl mx-auto">
+                매일 하나씩 자동으로 생성되는 AI 생산성 향상 블로그 포스트 관리 대시보드
+            </p>
+        </header>
+
+        <!-- 상태 대시보드 -->
+        <div class="grid md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+                <div class="text-3xl font-bold text-blue-600" id="totalPosts">30</div>
+                <div class="text-gray-600">총 포스트</div>
+            </div>
+            <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+                <div class="text-3xl font-bold text-green-600" id="publishedPosts">0</div>
+                <div class="text-gray-600">발행됨</div>
+            </div>
+            <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+                <div class="text-3xl font-bold text-yellow-600" id="scheduledPosts">30</div>
+                <div class="text-gray-600">예약됨</div>
+            </div>
+            <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+                <div class="text-3xl font-bold text-purple-600" id="nextPostDate">내일</div>
+                <div class="text-gray-600">다음 발행</div>
+            </div>
+        </div>
+
+        <!-- 진행률 바 -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">📊 진행 상황</h2>
+            <div class="w-full bg-gray-200 rounded-full h-4">
+                <div class="progress-bar bg-blue-600 h-4 rounded-full" style="width: 0%" id="progressBar"></div>
+            </div>
+            <p class="text-sm text-gray-600 mt-2" id="progressText">0% 완료 (0/30 포스트)</p>
+        </div>
+
+        <!-- 컨트롤 패널 -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">🎮 컨트롤 패널</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <button onclick="startScheduler()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors">
+                    ▶️ 스케줄러 시작
+                </button>
+                <button onclick="pauseScheduler()" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg transition-colors">
+                    ⏸️ 일시정지
+                </button>
+                <button onclick="generateNextPost()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors">
+                    📝 다음 포스트 생성
+                </button>
+                <button onclick="viewAllSchedule()" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg transition-colors">
+                    📅 전체 일정 보기
+                </button>
+            </div>
+        </div>
+
+        <!-- 최근 생성된 포스트 -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">📋 최근 생성된 포스트</h2>
+            <div id="recentPosts" class="space-y-4">
+                <!-- 동적으로 생성 -->
+            </div>
+        </div>
+
+        <!-- 스케줄 테이블 -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-xl font-semibold mb-4">📅 발행 스케줄</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full table-auto">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="px-4 py-2 text-left">#</th>
+                            <th class="px-4 py-2 text-left">발행일</th>
+                            <th class="px-4 py-2 text-left">제목</th>
+                            <th class="px-4 py-2 text-left">카테고리</th>
+                            <th class="px-4 py-2 text-left">난이도</th>
+                            <th class="px-4 py-2 text-left">상태</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scheduleTable">
+                        <!-- 동적으로 생성 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- 스케줄러 스크립트 -->
+    <script type="module">
+        // 블로그 스케줄러 임포트
+        import AIProductivityBlogScheduler from './ai-productivity-blog-scheduler.js';
+
+        class BlogAutomationDashboard {
+            constructor() {
+                this.scheduler = new AIProductivityBlogScheduler();
+                this.isRunning = false;
+                this.publishedCount = 0;
+                this.init();
+            }
+
+            init() {
+                this.updateDashboard();
+                this.renderScheduleTable();
+                this.loadStoredProgress();
+            }
+
+            updateDashboard() {
+                const total = this.scheduler.blogSeries.length;
+                const published = this.publishedCount;
+                const scheduled = total - published;
+                const progress = (published / total) * 100;
+
+                document.getElementById('totalPosts').textContent = total;
+                document.getElementById('publishedPosts').textContent = published;
+                document.getElementById('scheduledPosts').textContent = scheduled;
+                document.getElementById('progressBar').style.width = `${progress}%`;
+                document.getElementById('progressText').textContent =
+                    `${Math.round(progress)}% 완료 (${published}/${total} 포스트)`;
+
+                // 다음 발행일 계산
+                const nextDate = new Date();
+                nextDate.setDate(nextDate.getDate() + 1);
+                document.getElementById('nextPostDate').textContent =
+                    nextDate.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' });
+            }
+
+            renderScheduleTable() {
+                const schedule = this.scheduler.getSchedule();
+                const tableBody = document.getElementById('scheduleTable');
+
+                tableBody.innerHTML = schedule.map((item, index) => {
+                    const isPublished = index < this.publishedCount;
+                    const statusClass = isPublished ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600';
+                    const statusText = isPublished ? '✅ 발행됨' : '⏳ 예약됨';
+
+                    return `
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="px-4 py-2">${item.index}</td>
+                            <td class="px-4 py-2">${item.date}</td>
+                            <td class="px-4 py-2 font-medium">${item.title}</td>
+                            <td class="px-4 py-2">
+                                <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
+                                    ${item.category}
+                                </span>
+                            </td>
+                            <td class="px-4 py-2">
+                                <span class="px-2 py-1 ${this.getDifficultyColor(item.difficulty)} rounded-full text-xs">
+                                    ${item.difficulty}
+                                </span>
+                            </td>
+                            <td class="px-4 py-2">
+                                <span class="px-2 py-1 ${statusClass} rounded-full text-xs">
+                                    ${statusText}
+                                </span>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+
+            getDifficultyColor(difficulty) {
+                switch(difficulty) {
+                    case '초급': return 'bg-green-100 text-green-800';
+                    case '중급': return 'bg-yellow-100 text-yellow-800';
+                    case '고급': return 'bg-red-100 text-red-800';
+                    default: return 'bg-gray-100 text-gray-800';
+                }
+            }
+
+            startScheduler() {
+                if (this.isRunning) {
+                    alert('스케줄러가 이미 실행 중입니다.');
+                    return;
+                }
+
+                this.isRunning = true;
+                alert('🚀 자동 스케줄러가 시작되었습니다!\n매일 오전 9시에 새로운 포스트가 자동 생성됩니다.');
+
+                // 첫 실행
+                this.scheduleNextPost();
+
+                // 매일 실행되도록 설정
+                this.setDailySchedule();
+
+                // 로컬 스토리지에 상태 저장
+                localStorage.setItem('schedulerRunning', 'true');
+            }
+
+            pauseScheduler() {
+                this.isRunning = false;
+                localStorage.setItem('schedulerRunning', 'false');
+                alert('⏸️ 스케줄러가 일시정지되었습니다.');
+            }
+
+            scheduleNextPost() {
+                const post = this.scheduler.getNextPost();
+                if (post) {
+                    this.createBlogPost(post);
+                    this.publishedCount++;
+                    this.updateDashboard();
+                    this.renderScheduleTable();
+                    this.saveProgress();
+
+                    // 최근 포스트 표시
+                    this.addRecentPost(post);
+
+                    console.log(`📝 새 포스트 생성됨: ${post.title}`);
+                } else {
+                    alert('🎉 모든 포스트가 생성 완료되었습니다!');
+                    this.isRunning = false;
+                }
+            }
+
+            createBlogPost(post) {
+                // 실제 블로그 시스템에 포스트 생성
+                const filename = `${post.date}-${post.title.replace(/\s+/g, '-').replace(/[^\w-]/g, '')}.html`;
+                const htmlContent = this.scheduler.generateHTMLPost(post);
+
+                // 파일 다운로드로 시뮬레이션 (실제로는 서버에 업로드)
+                this.downloadFile(htmlContent, filename);
+
+                // 실제 구현시에는 여기에 API 호출 코드 추가
+                // await fetch('/api/posts', { method: 'POST', body: JSON.stringify(post) });
+            }
+
+            downloadFile(content, filename) {
+                const blob = new Blob([content], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+
+            addRecentPost(post) {
+                const recentPosts = document.getElementById('recentPosts');
+                const postElement = document.createElement('div');
+                postElement.className = 'p-4 border border-gray-200 rounded-lg';
+                postElement.innerHTML = `
+                    <h3 class="font-semibold text-lg mb-2">${post.title}</h3>
+                    <div class="flex items-center gap-4 text-sm text-gray-600">
+                        <span>📅 ${post.date}</span>
+                        <span>📂 ${post.category}</span>
+                        <span>⭐ ${post.difficulty}</span>
+                    </div>
+                    <p class="text-gray-700 mt-2">${post.metaDescription}</p>
+                `;
+
+                recentPosts.insertBefore(postElement, recentPosts.firstChild);
+
+                // 최대 5개만 표시
+                if (recentPosts.children.length > 5) {
+                    recentPosts.removeChild(recentPosts.lastChild);
+                }
+            }
+
+            setDailySchedule() {
+                // 매일 오전 9시에 실행
+                const now = new Date();
+                const tomorrow9AM = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 9, 0, 0, 0);
+                const msUntilTomorrow9AM = tomorrow9AM.getTime() - now.getTime();
+
+                setTimeout(() => {
+                    if (this.isRunning) {
+                        this.scheduleNextPost();
+                    }
+
+                    // 24시간마다 반복
+                    setInterval(() => {
+                        if (this.isRunning) {
+                            this.scheduleNextPost();
+                        }
+                    }, 86400000);
+                }, msUntilTomorrow9AM);
+            }
+
+            saveProgress() {
+                localStorage.setItem('publishedCount', this.publishedCount.toString());
+                localStorage.setItem('currentIndex', this.scheduler.currentIndex.toString());
+            }
+
+            loadStoredProgress() {
+                const stored = localStorage.getItem('publishedCount');
+                if (stored) {
+                    this.publishedCount = parseInt(stored);
+                    this.scheduler.currentIndex = parseInt(localStorage.getItem('currentIndex') || '0');
+                }
+
+                const schedulerRunning = localStorage.getItem('schedulerRunning');
+                if (schedulerRunning === 'true') {
+                    this.isRunning = true;
+                    this.setDailySchedule();
+                }
+            }
+        }
+
+        // 전역 함수들
+        window.dashboard = new BlogAutomationDashboard();
+
+        window.startScheduler = () => dashboard.startScheduler();
+        window.pauseScheduler = () => dashboard.pauseScheduler();
+        window.generateNextPost = () => dashboard.scheduleNextPost();
+        window.viewAllSchedule = () => {
+            const schedule = dashboard.scheduler.getSchedule();
+            console.table(schedule);
+            alert('📋 전체 스케줄이 브라우저 콘솔에 출력되었습니다. (F12 → Console 탭 확인)');
+        };
+
+        // 페이지 로드 시 자동 초기화
+        console.log('🚀 AI 생산성 블로그 자동화 시스템이 로드되었습니다!');
+    </script>
+</body>
+</html>
