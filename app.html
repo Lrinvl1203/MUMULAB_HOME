@@ -298,14 +298,6 @@
               </div>
             </a>
 
-            <a href="auto-blog-integration.html" class="nav-pill">
-              <div class="nav-pill-icon">🤖</div>
-              <div class="nav-pill-text">
-                <div class="nav-pill-title">자동 블로그</div>
-                <div class="nav-pill-desc">AI 생산성 포스팅</div>
-              </div>
-            </a>
-
             <a href="info/index.html" class="nav-pill">
               <div class="nav-pill-icon">ℹ️</div>
               <div class="nav-pill-text">
@@ -384,6 +376,16 @@
         const rate = scrolled * -0.5;
         document.querySelector('.ambient-bg').style.transform = `translateY(${rate}px)`;
       });
+
+      // Background Blog Scheduler (조용히 실행)
+      (async () => {
+        try {
+          const { default: BackgroundBlogScheduler } = await import('./background-blog-scheduler.js');
+          // 사용자에게 보이지 않게 백그라운드에서 자동 실행
+        } catch (error) {
+          // 오류 시에도 조용히 처리 (사용자에게 노출 안함)
+        }
+      })();
     </script>
   </body>
 </html>
