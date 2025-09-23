@@ -1,26 +1,9 @@
-#!/bin/bash
-# AI 생산성 블로그 포스트 생성 스크립트
-
-set -e
-
-CURRENT_TOPIC="$1"
-CURRENT_INDEX="$2"
-DATE=$(date +%Y-%m-%d)
-FILENAME="${DATE}-$(echo "$CURRENT_TOPIC" | sed 's/[^a-zA-Z0-9가-힣 ]//g' | sed 's/ /-/g').html"
-
-# 블로그 디렉토리 생성
-mkdir -p blog/posts
-
-echo "📝 블로그 포스트 생성: $FILENAME"
-
-# HTML 포스트 생성
-cat > "blog/posts/$FILENAME" << 'EOF'
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${CURRENT_TOPIC} - MUMULAB</title>
+    <title>AI 경력 분석으로 커리어 로드맵 그리기 - MUMULAB</title>
     <meta name="description" content="AI 생산성 향상을 위한 실용적인 가이드와 도구 활용법">
     <meta name="keywords" content="AI, 생산성, 인공지능, 자동화, 효율성">
     <link rel="stylesheet" href="../../style.css">
@@ -43,23 +26,75 @@ cat > "blog/posts/$FILENAME" << 'EOF'
         h2 { border-bottom: 2px solid #e5e7eb; padding-bottom: 0.5rem; margin-top: 2rem; }
         ul { margin-left: 1.5rem; margin-bottom: 1rem; }
         li { margin-bottom: 0.5rem; }
+
+        /* 날짜 기반 표시/숨김 처리 */
+        .date-locked {
+            display: none;
+        }
+        .coming-soon {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
     </style>
+    <script>
+        // 날짜 기반 콘텐츠 표시 제어
+        document.addEventListener('DOMContentLoaded', function() {
+            const postDate = new Date('2025-10-14');
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            postDate.setHours(0, 0, 0, 0);
+
+            const content = document.getElementById('post-content');
+            const comingSoon = document.getElementById('coming-soon');
+
+            if (postDate <= today) {
+                // 날짜가 되면 콘텐츠 표시
+                content.style.display = 'block';
+                comingSoon.style.display = 'none';
+            } else {
+                // 날짜가 안 되면 Coming Soon 표시
+                content.style.display = 'none';
+                comingSoon.style.display = 'block';
+
+                // 남은 일수 계산
+                const diffTime = postDate - today;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                document.getElementById('days-remaining').textContent = diffDays;
+                document.getElementById('release-date').textContent = postDate.toLocaleDateString('ko-KR');
+            }
+        });
+    </script>
 </head>
 <body>
     <div class="blog-post">
         <header>
-            <h1>${CURRENT_TOPIC}</h1>
+            <h1>AI 경력 분석으로 커리어 로드맵 그리기</h1>
             <div class="post-meta">
-                <span>📅 ${DATE}</span>
+                <span>📅 2025-10-14</span>
                 <span>📂 AI 생산성</span>
-                <span>⭐ 시리즈 $((CURRENT_INDEX + 1))/30</span>
+                <span>⭐ 시리즈 21/30</span>
             </div>
         </header>
 
-        <main>
+        <!-- Coming Soon 메시지 -->
+        <div id="coming-soon" class="coming-soon">
+            <h2>🔒 준비 중인 콘텐츠</h2>
+            <p>이 글은 <strong id="release-date"></strong>에 공개됩니다.</p>
+            <p>📅 <span id="days-remaining"></span>일 후에 만나보세요!</p>
+            <div style="margin-top: 2rem;">
+                <p>🎯 <strong>미리보기:</strong> AI 경력 분석으로 커리어 로드맵 그리기</p>
+                <p>💡 AI 생산성 향상을 위한 실용적인 팁과 도구를 소개합니다.</p>
+            </div>
+        </div>
+
+        <!-- 실제 콘텐츠 (날짜가 되면 표시) -->
+        <main id="post-content" style="display: none;">
             <h2>개요</h2>
             <p>현대 사회에서 AI 기술을 활용한 생산성 향상은 선택이 아닌 필수가 되었습니다.
-            이 가이드에서는 <strong>${CURRENT_TOPIC}</strong>에 대한 실용적인 방법과 도구들을 소개합니다.</p>
+            이 가이드에서는 <strong>AI 경력 분석으로 커리어 로드맵 그리기</strong>에 대한 실용적인 방법과 도구들을 소개합니다.</p>
 
             <h2>주요 기능</h2>
             <ul>
@@ -94,7 +129,7 @@ cat > "blog/posts/$FILENAME" << 'EOF'
             </ul>
 
             <h2>마무리</h2>
-            <p><strong>${CURRENT_TOPIC}</strong>를 통해 여러분의 일상 생산성이 크게 향상되기를 바랍니다.
+            <p><strong>AI 경력 분석으로 커리어 로드맵 그리기</strong>를 통해 여러분의 일상 생산성이 크게 향상되기를 바랍니다.
             꾸준한 학습과 적용을 통해 AI 시대에 맞는 새로운 업무 방식을 만들어가세요.</p>
         </main>
 
@@ -106,15 +141,3 @@ cat > "blog/posts/$FILENAME" << 'EOF'
     </div>
 </body>
 </html>
-EOF
-
-# 파일에서 템플릿 변수 치환
-sed -i "s/\${CURRENT_TOPIC}/$CURRENT_TOPIC/g" "blog/posts/$FILENAME"
-sed -i "s/\${DATE}/$DATE/g" "blog/posts/$FILENAME"
-sed -i "s/\${CURRENT_INDEX}/$CURRENT_INDEX/g" "blog/posts/$FILENAME"
-
-echo "✅ 블로그 포스트 생성 완료: $FILENAME"
-echo "title=$CURRENT_TOPIC"
-echo "filename=$FILENAME"
-echo "next_index=$((CURRENT_INDEX + 1))"
-echo "completed=false"

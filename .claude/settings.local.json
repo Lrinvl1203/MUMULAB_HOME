@@ -18,7 +18,9 @@
       "mcp__playwright__browser_tabs",
       "Bash(git tag:*)",
       "mcp__playwright__browser_press_key",
-      "mcp__playwright__browser_type"
+      "mcp__playwright__browser_type",
+      "Bash(chmod:*)",
+      "Bash(.github/scripts/generate-all-blog-posts.sh:*)"
     ],
     "deny": [],
     "ask": []

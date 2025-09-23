@@ -1,25 +1,19 @@
-name: Auto Blog Publisher
-# AI 생산성 블로그 자동 발행 워크플로우
+name: Generate All Blog Posts
+# AI 생산성 블로그 30개 일괄 생성 워크플로우
 
 on:
-  schedule:
-    # 매일 오전 9시 (KST) = UTC 0시 실행
-    - cron: '0 0 * * *'
-  workflow_dispatch: # 수동 실행 가능
+  workflow_dispatch: # 수동 실행 전용
     inputs:
-      series_index:
-        description: 'Blog series index (0-29)'
+      regenerate:
+        description: 'Regenerate all posts (true/false)'
         required: false
-        default: '0'
+        default: 'false'
   push:
     branches: [ main ]
-    paths: [ '.github/workflows/auto-blog-publisher.yml' ]
-
-env:
-  BLOG_SERIES_INDEX: ${{ github.event.inputs.series_index || vars.BLOG_SERIES_INDEX || '0' }}
+    paths: [ '.github/workflows/auto-blog-publisher.yml', '.github/scripts/generate-all-blog-posts.sh' ]
 
 jobs:
-  generate-and-publish:
+  generate-all-posts:
     runs-on: ubuntu-latest
 
     steps:
@@ -33,78 +27,40 @@ jobs:
       with:
         node-version: '18'
 
-    - name: Generate blog post
+    - name: Generate all blog posts
       id: generate
       run: |
-        echo "🚀 블로그 포스트 생성 시작..."
+        echo "🚀 AI 생산성 블로그 시리즈 30개 일괄 생성 시작..."
 
-        # 현재 인덱스 확인
-        CURRENT_INDEX=${BLOG_SERIES_INDEX:-0}
-        echo "현재 시리즈 인덱스: $CURRENT_INDEX"
+        # 기존 파일 확인
+        EXISTING_COUNT=$(find blog/posts/ -name "*.html" | wc -l || echo "0")
+        echo "기존 블로그 파일 수: $EXISTING_COUNT"
 
-        # 시리즈 완료 확인
-        if [ "$CURRENT_INDEX" -ge 30 ]; then
-          echo "🎉 블로그 시리즈 30개 모두 완성!"
+        # 재생성 여부 확인
+        REGENERATE="${{ github.event.inputs.regenerate || 'false' }}"
+
+        if [ "$EXISTING_COUNT" -gt "20" ] && [ "$REGENERATE" != "true" ]; then
+          echo "📋 이미 충분한 블로그 파일이 존재합니다."
+          echo "재생성하려면 workflow_dispatch에서 regenerate=true로 설정하세요."
           echo "completed=true" >> $GITHUB_OUTPUT
+          echo "action=skipped" >> $GITHUB_OUTPUT
           exit 0
         fi
 
-        # 블로그 주제 배열
-        TOPICS=(
-          "AI로 하루 1시간 절약하기 - 일정 관리 자동화"
-          "스마트폰으로 시작하는 AI 생산성 - 필수 앱 5선"
-          "AI 음성인식으로 업무 효율 10배 높이기"
-          "ChatGPT로 이메일 작성 시간 90% 단축하기"
-          "AI 요약 도구로 정보 과부하 해결하기"
-          "개인 맞춤형 AI 비서 만들기 - GPT 커스텀 활용법"
-          "AI 번역으로 글로벌 소통의 벽 허물기"
-          "AI로 10분 만에 프레젠테이션 완성하기"
-          "AI 이미지 생성으로 콘텐츠 제작 혁신하기"
-          "AI 글쓰기 도구로 블로그 포스팅 자동화하기"
-          "AI 동영상 편집으로 유튜브 콘텐츠 제작 가속화"
-          "AI 음악 생성으로 개인 브랜딩 사운드 만들기"
-          "AI 코딩 어시스턴트로 프로그래밍 생산성 극대화"
-          "AI 디자인 도구로 전문가급 그래픽 디자인하기"
-          "AI 데이터 분석으로 개인 패턴 발견하기"
-          "AI 예측 모델로 개인 목표 달성률 높이기"
-          "AI 추천 시스템으로 효율적인 학습 경로 설계하기"
-          "AI 재정 관리로 스마트한 가계부 운영하기"
-          "AI 건강 모니터링으로 웰빙 라이프 실현하기"
-          "AI 트렌드 분석으로 투자 인사이트 얻기"
-          "AI 경력 분석으로 커리어 로드맵 그리기"
-          "AI 워크플로우 자동화로 반복 업무 제로 만들기"
-          "개인용 AI 챗봇 구축으로 24시간 어시스턴트 만들기"
-          "AI 통합 대시보드로 모든 정보 한눈에 관리하기"
-          "AI 피드백 루프로 지속적인 개인 성장 시스템 만들기"
-          "AI 협업 도구로 팀 생산성 10배 향상시키기"
-          "AI 보안 도구로 개인정보 및 디지털 자산 보호하기"
-          "2024년 주목해야 할 신흥 AI 도구 10선"
-          "AI 윤리와 개인 생산성의 균형점 찾기"
-          "AI 시대의 새로운 생산성 패러다임"
-        )
+        # 블로그 포스트 일괄 생성 스크립트 실행
+        chmod +x .github/scripts/generate-all-blog-posts.sh
+        .github/scripts/generate-all-blog-posts.sh
 
-        # 현재 주제 선택
-        if [ "$CURRENT_INDEX" -lt "${#TOPICS[@]}" ]; then
-          CURRENT_TOPIC="${TOPICS[$CURRENT_INDEX]}"
-        else
-          echo "❌ 인덱스가 범위를 벗어났습니다: $CURRENT_INDEX"
-          exit 1
-        fi
+        # 생성된 파일 수 확인
+        NEW_COUNT=$(find blog/posts/ -name "*.html" | wc -l)
+        echo "생성 후 총 파일 수: $NEW_COUNT"
 
-        # 블로그 포스트 생성 스크립트 실행
-        chmod +x .github/scripts/generate-blog-post.sh
-        OUTPUT=$(.github/scripts/generate-blog-post.sh "$CURRENT_TOPIC" "$CURRENT_INDEX")
-
-        # 출력에서 정보 추출
-        FILENAME=$(echo "$OUTPUT" | grep "filename=" | cut -d'=' -f2)
-
-        echo "title=$CURRENT_TOPIC" >> $GITHUB_OUTPUT
-        echo "filename=$FILENAME" >> $GITHUB_OUTPUT
-        echo "next_index=$((CURRENT_INDEX + 1))" >> $GITHUB_OUTPUT
-        echo "completed=false" >> $GITHUB_OUTPUT
+        echo "completed=true" >> $GITHUB_OUTPUT
+        echo "action=generated" >> $GITHUB_OUTPUT
+        echo "file_count=$NEW_COUNT" >> $GITHUB_OUTPUT
 
     - name: Commit and push changes
-      if: steps.generate.outputs.completed != 'true'
+      if: steps.generate.outputs.action == 'generated'
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action Bot"
@@ -114,45 +70,32 @@ jobs:
         if git diff --staged --quiet; then
           echo "변경사항이 없습니다."
         else
-          git commit -m "🤖 자동 생성: ${{ steps.generate.outputs.title }}
+          git commit -m "🤖 AI 생산성 블로그 시리즈 30개 일괄 생성
 
-          - 파일: ${{ steps.generate.outputs.filename }}
-          - 시리즈: AI 생산성 향상 (${{ env.BLOG_SERIES_INDEX }}/30)
-          - 자동 생성 시간: $(date +'%Y-%m-%d %H:%M:%S UTC')
+          📝 새로운 날짜 기반 시스템:
+          - 모든 블로그 포스트를 미리 생성
+          - JavaScript로 날짜 기반 자동 공개
+          - 공개 전까지 'Coming Soon' 메시지 표시
+          - 매일 하나씩 자동으로 공개됨
+
+          📊 생성된 파일 수: ${{ steps.generate.outputs.file_count }}개
+          📅 생성 시간: $(date +'%Y-%m-%d %H:%M:%S UTC')
 
           🤖 Generated with GitHub Actions"
 
           git push
         fi
 
-    - name: Update series index
-      if: steps.generate.outputs.completed != 'true'
-      uses: actions/github-script@v7
-      with:
-        script: |
-          const nextIndex = '${{ steps.generate.outputs.next_index }}';
-
-          try {
-            await github.rest.actions.createOrUpdateRepoVariable({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              name: 'BLOG_SERIES_INDEX',
-              value: nextIndex
-            });
-            console.log(`📊 시리즈 인덱스 업데이트 성공: ${nextIndex}`);
-          } catch (error) {
-            console.log(`📊 시리즈 인덱스 설정: ${nextIndex} (변수가 없어서 새로 생성)`);
-          }
-
     - name: Success notification
-      if: success() && steps.generate.outputs.completed != 'true'
+      if: success() && steps.generate.outputs.action == 'generated'
       run: |
-        echo "✅ 성공: '${{ steps.generate.outputs.title }}' 포스트가 자동 생성되었습니다!"
-        echo "📅 다음 포스트는 내일 같은 시간에 자동 생성됩니다."
-        echo "🔗 파일: ${{ steps.generate.outputs.filename }}"
+        echo "✅ 성공: AI 생산성 블로그 시리즈 30개가 모두 생성되었습니다!"
+        echo "📊 총 생성된 파일: ${{ steps.generate.outputs.file_count }}개"
+        echo "🎯 시스템: 날짜 기반 자동 공개 방식"
+        echo "📅 매일 하루에 하나씩 자동으로 공개됩니다."
 
-    - name: Series completion
-      if: steps.generate.outputs.completed == 'true'
+    - name: Skipped notification
+      if: steps.generate.outputs.action == 'skipped'
       run: |
-        echo "🎉 AI 생산성 블로그 시리즈 30개 모두 완성!"
-        echo "📊 총 30개의 포스트가 성공적으로 생성되었습니다."
+        echo "📋 이미 충분한 블로그 파일이 존재하여 생성을 건너뛰었습니다."
+        echo "🔧 재생성하려면 Actions에서 workflow_dispatch를 사용하고 regenerate=true로 설정하세요."
