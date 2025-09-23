@@ -360,8 +360,31 @@
         // 현재 편집 중인 포스트 ID
         let currentPostId = null;
 
+        // 기존 포스트 slug 마이그레이션
+        function migratePostSlugs() {
+            const posts = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            let migrated = false;
+
+            posts.forEach(post => {
+                // slug가 없거나 admin- 형태인 경우 새로 생성
+                if (!post.slug || post.slug.startsWith('admin-')) {
+                    const date = post.published || post.created;
+                    post.slug = generateSlug(post.title, date);
+                    migrated = true;
+                }
+            });
+
+            if (migrated) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+                console.log('포스트 slug 마이그레이션 완료');
+            }
+        }
+
         // 페이지 로드시 초기화
         document.addEventListener('DOMContentLoaded', () => {
+            // 포스트 slug 마이그레이션 실행
+            migratePostSlugs();
+
             // 인증 확인
             if (isAuthenticated()) {
                 showAdminEditor();
@@ -591,11 +614,19 @@
             `;
         }
 
+        // 파일명 생성 함수
+        function generateSlug(title, date) {
+            const formattedDate = new Date(date).toISOString().split('T')[0];
+            const cleanTitle = title.replace(/[^a-zA-Z0-9가-힣\s]/g, '').replace(/\s+/g, '-');
+            return `${formattedDate}-${cleanTitle}`;
+        }
+
         // 포스트 저장
         function savePost() {
+            const title = document.getElementById('postTitle').value;
             const postData = {
                 id: currentPostId || Date.now().toString(),
-                title: document.getElementById('postTitle').value,
+                title: title,
                 category: document.getElementById('postCategory').value,
                 tags: document.getElementById('postTags').value.split(',').map(tag => tag.trim()),
                 difficulty: document.getElementById('postDifficulty').value,
@@ -605,6 +636,9 @@
                 updated: new Date().toISOString(),
                 status: 'draft'
             };
+
+            // slug 생성 (파일명과 일치하도록)
+            postData.slug = generateSlug(title, postData.created);
 
             if (!postData.title.trim()) {
                 alert('제목을 입력해주세요.');
@@ -627,12 +661,16 @@
                 if (post) {
                     post.status = 'published';
                     post.published = new Date().toISOString();
+
+                    // 발행 시 slug 업데이트 (발행 날짜 기준)
+                    post.slug = generateSlug(post.title, post.published);
+
                     savePostToStorage(post);
 
                     // HTML 파일 생성
                     await generateHTMLFile(post);
 
-                    showPublishSuccess(filename);
+                    showPublishSuccess(post.slug + '.html');
                     refreshBlogList();
                 }
             }
@@ -640,8 +678,7 @@
 
         // HTML 파일 생성 및 업로드
         async function generateHTMLFile(post) {
-            const date = new Date(post.published || post.created).toISOString().split('T')[0];
-            const filename = `${date}-${post.title.replace(/[^a-zA-Z0-9가-힣\\s]/g, '').replace(/\\s+/g, '-')}.html`;
+            const filename = `${post.slug}.html`;
 
             const htmlContent = `<!DOCTYPE html>
 <html lang="ko">
