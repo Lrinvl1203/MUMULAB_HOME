@@ -99,7 +99,7 @@ jobs:
         mkdir -p blog/posts
 
         # HTML 포스트 생성
-        cat > "blog/posts/$FILENAME" << EOF
+        cat > "blog/posts/$FILENAME" << 'EOF'
 <!DOCTYPE html>
 <html lang="ko">
 <head>
