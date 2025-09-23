@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔒 MUMULAB 관리자 대시보드</title>
+
+    <!-- SEO 차단 -->
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <meta name="googlebot" content="noindex, nofollow">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom Styles -->
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .admin-card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .admin-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        .status-active {
+            background: #10b981;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        }
+
+        .status-inactive {
+            background: #ef4444;
+        }
+
+        .status-pending {
+            background: #f59e0b;
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- 인증 모달 -->
+    <div id="authModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="admin-card rounded-lg p-8 max-w-md w-full mx-4">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold mb-2">🔐 관리자 인증</h2>
+                <p class="text-gray-300">MUMULAB 관리자 대시보드에 접근하려면 인증이 필요합니다</p>
+                <div class="text-xs text-gray-400 mt-2">단축키: Ctrl + Alt + A</div>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2">관리자 비밀번호</label>
+                    <input type="password" id="adminPassword"
+                           class="w-full px-4 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-white placeholder-gray-300"
+                           placeholder="비밀번호를 입력하세요" autofocus>
+                </div>
+
+                <div class="flex space-x-4">
+                    <button onclick="authenticateAdmin()"
+                            class="flex-1 bg-purple-600 hover:bg-purple-700 px-6 py-2 rounded-lg font-semibold transition-colors">
+                        로그인
+                    </button>
+                    <button onclick="window.history.back()"
+                            class="flex-1 bg-gray-600 hover:bg-gray-700 px-6 py-2 rounded-lg font-semibold transition-colors">
+                        취소
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 메인 대시보드 -->
+    <div id="dashboard" class="hidden">
+        <!-- 헤더 -->
+        <header class="admin-card m-6 rounded-lg p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold">🔒 MUMULAB 관리자 대시보드</h1>
+                    <p class="text-gray-300 mt-1">시스템 관리 및 콘텐츠 운영</p>
+                </div>
+                <div class="text-right">
+                    <div class="text-sm text-gray-300">마지막 로그인</div>
+                    <div id="lastLogin" class="font-semibold">-</div>
+                    <button onclick="logout()" class="mt-2 bg-red-600 hover:bg-red-700 px-4 py-1 rounded text-sm transition-colors">
+                        로그아웃
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- 시스템 상태 -->
+        <section class="mx-6 mb-6">
+            <div class="admin-card rounded-lg p-6">
+                <h2 class="text-xl font-bold mb-4">📊 시스템 상태</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-white bg-opacity-10 rounded-lg p-4">
+                        <div class="flex items-center mb-2">
+                            <span class="status-indicator status-active"></span>
+                            <span class="font-semibold">블로그 자동 발행</span>
+                        </div>
+                        <div class="text-2xl font-bold" id="blogCount">0</div>
+                        <div class="text-sm text-gray-300">총 발행된 포스트</div>
+                    </div>
+
+                    <div class="bg-white bg-opacity-10 rounded-lg p-4">
+                        <div class="flex items-center mb-2">
+                            <span class="status-indicator status-active"></span>
+                            <span class="font-semibold">관리자 에디터</span>
+                        </div>
+                        <div class="text-2xl font-bold" id="manualPosts">0</div>
+                        <div class="text-sm text-gray-300">수동 작성 포스트</div>
+                    </div>
+
+                    <div class="bg-white bg-opacity-10 rounded-lg p-4">
+                        <div class="flex items-center mb-2">
+                            <span class="status-indicator status-pending"></span>
+                            <span class="font-semibold">시스템 상태</span>
+                        </div>
+                        <div class="text-lg font-bold text-green-400">정상</div>
+                        <div class="text-sm text-gray-300">모든 서비스 가동 중</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 주요 기능 -->
+        <section class="mx-6 mb-6">
+            <div class="admin-card rounded-lg p-6">
+                <h2 class="text-xl font-bold mb-4">🛠️ 주요 기능</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+                    <!-- 블로그 관리 -->
+                    <div class="admin-card rounded-lg p-6 cursor-pointer hover:scale-105 transition-transform" onclick="openBlogEditor()">
+                        <div class="text-center">
+                            <div class="text-4xl mb-3">✏️</div>
+                            <h3 class="font-bold text-lg mb-2">블로그 에디터</h3>
+                            <p class="text-sm text-gray-300 mb-4">블로그 포스트 작성 및 편집</p>
+                            <div class="bg-purple-600 px-4 py-2 rounded text-sm font-semibold">
+                                에디터 열기
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 자동 발행 관리 -->
+                    <div class="admin-card rounded-lg p-6 cursor-pointer hover:scale-105 transition-transform" onclick="openAutoPublisher()">
+                        <div class="text-center">
+                            <div class="text-4xl mb-3">🤖</div>
+                            <h3 class="font-bold text-lg mb-2">자동 발행 관리</h3>
+                            <p class="text-sm text-gray-300 mb-4">AI 블로그 자동 발행 설정</p>
+                            <div class="bg-blue-600 px-4 py-2 rounded text-sm font-semibold">
+                                설정 관리
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 사이트 분석 -->
+                    <div class="admin-card rounded-lg p-6 cursor-pointer hover:scale-105 transition-transform" onclick="openAnalytics()">
+                        <div class="text-center">
+                            <div class="text-4xl mb-3">📈</div>
+                            <h3 class="font-bold text-lg mb-2">사이트 분석</h3>
+                            <p class="text-sm text-gray-300 mb-4">방문자 및 성과 분석</p>
+                            <div class="bg-green-600 px-4 py-2 rounded text-sm font-semibold">
+                                분석 보기
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SEO 관리 -->
+                    <div class="admin-card rounded-lg p-6 cursor-pointer hover:scale-105 transition-transform" onclick="openSEO()">
+                        <div class="text-center">
+                            <div class="text-4xl mb-3">🔍</div>
+                            <h3 class="font-bold text-lg mb-2">SEO 관리</h3>
+                            <p class="text-sm text-gray-300 mb-4">검색 엔진 최적화 설정</p>
+                            <div class="bg-orange-600 px-4 py-2 rounded text-sm font-semibold">
+                                SEO 설정
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 백업 & 복원 -->
+                    <div class="admin-card rounded-lg p-6 cursor-pointer hover:scale-105 transition-transform" onclick="openBackup()">
+                        <div class="text-center">
+                            <div class="text-4xl mb-3">💾</div>
+                            <h3 class="font-bold text-lg mb-2">백업 & 복원</h3>
+                            <p class="text-sm text-gray-300 mb-4">데이터 백업 및 복원</p>
+                            <div class="bg-indigo-600 px-4 py-2 rounded text-sm font-semibold">
+                                백업 관리
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 시스템 설정 -->
+                    <div class="admin-card rounded-lg p-6 cursor-pointer hover:scale-105 transition-transform" onclick="openSettings()">
+                        <div class="text-center">
+                            <div class="text-4xl mb-3">⚙️</div>
+                            <h3 class="font-bold text-lg mb-2">시스템 설정</h3>
+                            <p class="text-sm text-gray-300 mb-4">전체 시스템 환경 설정</p>
+                            <div class="bg-gray-600 px-4 py-2 rounded text-sm font-semibold">
+                                설정 열기
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 최근 활동 -->
+        <section class="mx-6 mb-6">
+            <div class="admin-card rounded-lg p-6">
+                <h2 class="text-xl font-bold mb-4">📋 최근 활동</h2>
+                <div id="recentActivity" class="space-y-3">
+                    <!-- 활동 로그가 여기에 동적으로 추가됩니다 -->
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // 관리자 비밀번호 (실제 환경에서는 더 안전한 방법 사용)
+        const ADMIN_PASSWORD = 'mumulab2024!';
+
+        // 페이지 로드 시 인증 상태 확인
+        document.addEventListener('DOMContentLoaded', function() {
+            const isAuthenticated = sessionStorage.getItem('admin_authenticated');
+            if (isAuthenticated === 'true') {
+                showDashboard();
+            }
+
+            // Enter 키로 로그인
+            document.getElementById('adminPassword').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    authenticateAdmin();
+                }
+            });
+
+            loadDashboardData();
+        });
+
+        function authenticateAdmin() {
+            const password = document.getElementById('adminPassword').value;
+
+            if (password === ADMIN_PASSWORD) {
+                sessionStorage.setItem('admin_authenticated', 'true');
+                sessionStorage.setItem('admin_login_time', new Date().toISOString());
+                showDashboard();
+                addActivity('관리자 로그인', '성공적으로 인증되었습니다');
+            } else {
+                alert('잘못된 비밀번호입니다.');
+                document.getElementById('adminPassword').value = '';
+                document.getElementById('adminPassword').focus();
+                addActivity('로그인 실패', '잘못된 비밀번호 시도');
+            }
+        }
+
+        function logout() {
+            if (confirm('로그아웃 하시겠습니까?')) {
+                sessionStorage.removeItem('admin_authenticated');
+                sessionStorage.removeItem('admin_login_time');
+                location.reload();
+            }
+        }
+
+        function showDashboard() {
+            document.getElementById('authModal').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+
+            // 마지막 로그인 시간 표시
+            const loginTime = sessionStorage.getItem('admin_login_time');
+            if (loginTime) {
+                const date = new Date(loginTime);
+                document.getElementById('lastLogin').textContent =
+                    date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+            }
+        }
+
+        function loadDashboardData() {
+            // 블로그 포스트 개수 로드
+            try {
+                const blogPosts = JSON.parse(localStorage.getItem('mumulab_blog_posts') || '[]');
+                document.getElementById('manualPosts').textContent = blogPosts.length;
+            } catch (e) {
+                document.getElementById('manualPosts').textContent = '0';
+            }
+
+            // GitHub Actions 자동 발행 포스트 개수 (추정)
+            const startDate = new Date('2024-09-23');
+            const today = new Date();
+            const daysDiff = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+            const estimatedAutoPosts = Math.min(daysDiff, 30); // 최대 30개
+            document.getElementById('blogCount').textContent = estimatedAutoPosts;
+        }
+
+        function addActivity(title, description) {
+            const activityList = document.getElementById('recentActivity');
+            const time = new Date().toLocaleTimeString();
+
+            const activityItem = document.createElement('div');
+            activityItem.className = 'bg-white bg-opacity-10 rounded-lg p-3';
+            activityItem.innerHTML = `
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="font-semibold">${title}</div>
+                        <div class="text-sm text-gray-300">${description}</div>
+                    </div>
+                    <div class="text-xs text-gray-400">${time}</div>
+                </div>
+            `;
+
+            activityList.insertBefore(activityItem, activityList.firstChild);
+
+            // 최대 10개 활동만 표시
+            while (activityList.children.length > 10) {
+                activityList.removeChild(activityList.lastChild);
+            }
+        }
+
+        // 기능별 함수들
+        function openBlogEditor() {
+            addActivity('블로그 에디터 접근', '블로그 포스트 작성 화면으로 이동');
+            window.open('blog-admin-editor.html', '_blank');
+        }
+
+        function openAutoPublisher() {
+            addActivity('자동 발행 관리 접근', '자동 블로그 발행 설정 화면으로 이동');
+            window.open('auto-blog-integration.html', '_blank');
+        }
+
+        function openAnalytics() {
+            addActivity('사이트 분석 접근', 'Google Analytics 대시보드로 이동');
+            window.open('https://analytics.google.com/analytics/web/', '_blank');
+        }
+
+        function openSEO() {
+            addActivity('SEO 관리 접근', 'SEO 설정 화면 접근');
+            alert('🚧 SEO 관리 기능은 개발 중입니다.\n\n현재 구현된 SEO 기능:\n- Google Site Verification\n- Meta tags 최적화\n- Sitemap 자동 생성');
+        }
+
+        function openBackup() {
+            addActivity('백업 관리 접근', '데이터 백업 기능 접근');
+            alert('🚧 백업 & 복원 기능은 개발 중입니다.\n\n계획된 기능:\n- 블로그 포스트 백업\n- 설정 데이터 백업\n- 자동 백업 스케줄링');
+        }
+
+        function openSettings() {
+            addActivity('시스템 설정 접근', '전체 시스템 설정 화면 접근');
+            alert('🚧 시스템 설정 기능은 개발 중입니다.\n\n계획된 설정:\n- 사이트 기본 정보\n- 블로그 설정\n- 자동화 설정\n- 보안 설정');
+        }
+
+        // 전역 관리자 액세스 스크립트 포함
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.altKey && e.key.toLowerCase() === 'a') {
+                e.preventDefault();
+                // 이미 관리자 대시보드에 있으므로 아무것도 하지 않음
+            }
+        });
+    </script>
+</body>
+</html>

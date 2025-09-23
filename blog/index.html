@@ -580,15 +580,11 @@
           }
         });
 
-        // 관리자 모드 단축키 (Ctrl + Alt + A)
-        document.addEventListener('keydown', (e) => {
-          if (e.ctrlKey && e.altKey && e.key === 'A') {
-            e.preventDefault();
-            // 관리자 에디터 페이지로 이동
-            window.location.href = '../blog-admin-editor.html';
-          }
-        });
+        // 관리자 글로벌 액세스는 별도 스크립트에서 처리
       });
     </script>
+
+    <!-- 관리자 글로벌 액세스 -->
+    <script src="../admin-global.js"></script>
   </body>
 </html>
