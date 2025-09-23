@@ -619,7 +619,7 @@
         }
 
         // 포스트 발행
-        function publishPost() {
+        async function publishPost() {
             savePost(); // 먼저 저장
 
             if (currentPostId) {
@@ -630,16 +630,16 @@
                     savePostToStorage(post);
 
                     // HTML 파일 생성
-                    generateHTMLFile(post);
+                    await generateHTMLFile(post);
 
-                    alert('포스트가 발행되었습니다!');
+                    showPublishSuccess(filename);
                     refreshBlogList();
                 }
             }
         }
 
-        // HTML 파일 생성
-        function generateHTMLFile(post) {
+        // HTML 파일 생성 및 업로드
+        async function generateHTMLFile(post) {
             const date = new Date(post.published || post.created).toISOString().split('T')[0];
             const filename = `${date}-${post.title.replace(/[^a-zA-Z0-9가-힣\\s]/g, '').replace(/\\s+/g, '-')}.html`;
 
@@ -695,7 +695,19 @@
 </body>
 </html>`;
 
-            // 파일 다운로드
+            // 로컬 스토리지에 파일 정보 저장 (GitHub Actions가 처리할 수 있도록)
+            const blogFiles = JSON.parse(localStorage.getItem('mumulab_blog_files') || '[]');
+            const fileInfo = {
+                filename: filename,
+                content: htmlContent,
+                post: post,
+                created: new Date().toISOString()
+            };
+
+            blogFiles.push(fileInfo);
+            localStorage.setItem('mumulab_blog_files', JSON.stringify(blogFiles));
+
+            // 파일 다운로드 (백업용)
             const blob = new Blob([htmlContent], { type: 'text/html' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -705,6 +717,81 @@
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
+
+            // GitHub에 파일 업로드 시도
+            try {
+                await uploadToGitHub(filename, htmlContent, post);
+            } catch (error) {
+                console.log('GitHub 업로드 실패, 수동 업로드 필요:', error);
+                showUploadInstructions(filename);
+            }
+        }
+
+        // GitHub에 파일 업로드
+        async function uploadToGitHub(filename, content, post) {
+            // 현재는 GitHub API 토큰이 없으므로 시뮬레이션
+            // 실제 구현 시 GitHub Personal Access Token 필요
+            throw new Error('GitHub API 업로드는 개발 중입니다.');
+        }
+
+        // 발행 성공 알림
+        function showPublishSuccess(filename) {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            modal.innerHTML = `
+                <div class="bg-white rounded-lg p-6 max-w-md mx-4">
+                    <h3 class="text-lg font-bold mb-4 text-green-600">🎉 포스트 발행 완료!</h3>
+                    <p class="mb-4">포스트가 성공적으로 발행되었습니다.</p>
+                    <div class="bg-blue-50 p-3 rounded mb-4">
+                        <p class="text-sm"><strong>📁 파일:</strong> ${filename}</p>
+                        <p class="text-sm"><strong>📋 상태:</strong> 블로그 목록에 추가됨</p>
+                    </div>
+                    <div class="bg-yellow-50 p-3 rounded mb-4">
+                        <p class="text-sm text-yellow-800">
+                            <strong>⚠️ 안내:</strong> 다운로드된 HTML 파일을 <code>blog/posts/</code> 폴더에 업로드하면 실제 페이지에서 확인할 수 있습니다.
+                        </p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="this.closest('.fixed').remove()" class="flex-1 bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700">
+                            확인
+                        </button>
+                        <button onclick="window.open('../blog/index.html', '_blank')" class="flex-1 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
+                            블로그 보기
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // 수동 업로드 안내
+        function showUploadInstructions(filename) {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            modal.innerHTML = `
+                <div class="bg-white rounded-lg p-6 max-w-md mx-4">
+                    <h3 class="text-lg font-bold mb-4">📁 파일 업로드 안내</h3>
+                    <p class="mb-4">다운로드된 HTML 파일을 다음 경로에 업로드해주세요:</p>
+                    <code class="bg-gray-100 p-2 rounded block mb-4">blog/posts/${filename}</code>
+                    <p class="text-sm text-gray-600 mb-4">
+                        파일이 업로드되면 블로그에서 포스트를 확인할 수 있습니다.
+                    </p>
+                    <div class="flex space-x-2">
+                        <button onclick="this.closest('.fixed').remove()" class="flex-1 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
+                            확인
+                        </button>
+                        <button onclick="openFileLocation()" class="flex-1 bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700">
+                            다운로드 폴더 열기
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // 다운로드 폴더 열기 (브라우저 제한으로 실제로는 작동하지 않음)
+        function openFileLocation() {
+            alert('다운로드 폴더에서 HTML 파일을 찾아 blog/posts/ 폴더에 업로드해주세요.');
         }
 
         // 에디터 초기화
