@@ -353,6 +353,9 @@
                                 <button onclick="refreshBlogList()" class="bg-blue-500 text-white px-3 py-2 rounded hover:bg-blue-600 transition-colors text-sm">
                                     🔄 새로고침
                                 </button>
+                                <button onclick="addSamplePost()" class="bg-purple-500 text-white px-3 py-2 rounded hover:bg-purple-600 transition-colors text-sm">
+                                    ➕ 테스트글
+                                </button>
                             </div>
                         </div>
 
@@ -455,6 +458,9 @@
 
             // 에디터 이벤트 설정
             setupEditor();
+
+            // 블로그 목록 초기 로드
+            refreshBlogList();
 
             // 힌트 표시
             showShortcutHint();
@@ -1067,6 +1073,31 @@
                 document.body.removeChild(textArea);
                 alert('경로가 클립보드에 복사되었습니다!');
             });
+        }
+
+        // 테스트용 샘플 글 추가 (개발 시에만 사용)
+        function addSamplePost() {
+            if (!confirm('테스트용 샘플 글을 추가하시겠습니까?')) return;
+
+            const samplePost = {
+                id: 'sample_' + Date.now(),
+                title: '테스트용 샘플 글 - AI 생산성 향상하기',
+                category: 'AI생산성',
+                tags: 'AI, 생산성, 테스트',
+                difficulty: '중급',
+                summary: '이것은 테스트용 샘플 블로그 글입니다. 관리자 시스템이 정상적으로 작동하는지 확인하기 위해 생성되었습니다.',
+                content: '<h2>샘플 글 내용</h2><p>이것은 테스트용 샘플 글입니다.</p><ul><li>기능 테스트용</li><li>시스템 확인용</li><li>데모용</li></ul>',
+                created: new Date().toISOString(),
+                updated: new Date().toISOString(),
+                status: 'draft'
+            };
+
+            const posts = getAllPosts();
+            posts.push(samplePost);
+            localStorage.setItem('mumulab_blog_posts', JSON.stringify(posts));
+
+            alert('샘플 글이 추가되었습니다!');
+            refreshBlogList();
         }
 
         // 통계 업데이트
