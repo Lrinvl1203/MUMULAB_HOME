@@ -15,7 +15,8 @@
       "mcp__playwright__browser_resize",
       "mcp__sequential-thinking__sequentialthinking",
       "mcp__playwright__browser_snapshot",
-      "mcp__playwright__browser_tabs"
+      "mcp__playwright__browser_tabs",
+      "Bash(git tag:*)"
     ],
     "deny": [],
     "ask": []
