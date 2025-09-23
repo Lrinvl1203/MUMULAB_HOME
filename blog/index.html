@@ -267,8 +267,50 @@
     </div>
 
     <script>
-      // 블로그 포스트 데이터 (예약 업로드 시스템)
-      const blogPosts = [
+      // 관리자가 작성한 블로그 포스트를 로드하는 함수
+      function loadAdminPosts() {
+        try {
+          const adminPosts = JSON.parse(localStorage.getItem('mumulab_blog_posts') || '[]');
+          return adminPosts
+            .filter(post => post.status === 'published')
+            .sort((a, b) => new Date(b.published || b.created) - new Date(a.published || a.created))
+            .map(post => ({
+              id: post.id,
+              title: post.title,
+              summary: post.summary || post.content.substring(0, 150).replace(/<[^>]*>/g, '') + '...',
+              category: getCategoryKey(post.category),
+              date: new Date(post.published || post.created).toLocaleDateString('ko-KR'),
+              publishDate: new Date(post.published || post.created).toISOString().split('T')[0],
+              slug: `admin-${post.id}`,
+              tags: post.tags || [],
+              difficulty: post.difficulty
+            }));
+        } catch (error) {
+          console.warn('관리자 포스트 로드 실패:', error);
+          return [];
+        }
+      }
+
+      // 카테고리 매핑 함수
+      function getCategoryKey(category) {
+        const categoryMap = {
+          'AI생산성': 'tech',
+          '시간관리': 'life',
+          '모바일AI': 'tech',
+          '음성AI': 'tech',
+          '커뮤니케이션': 'business',
+          '정보처리': 'tech',
+          '개인화AI': 'tech',
+          '언어AI': 'tech',
+          '창작AI': 'tech',
+          '데이터분석': 'tech',
+          '자동화': 'tech'
+        };
+        return categoryMap[category] || 'tech';
+      }
+
+      // 기본 블로그 포스트 데이터 (관리자 포스트와 함께 표시)
+      const defaultBlogPosts = [
         {
           id: 5,
           title: "AI 코딩 어시스턴트 완벽 비교: Claude vs ChatGPT vs GitHub Copilot",
@@ -432,10 +474,19 @@
         'life': '일상'
       };
 
+      // 모든 블로그 포스트 합치기 (관리자 포스트 + 기본 포스트)
+      function getAllPosts() {
+        const adminPosts = loadAdminPosts();
+        const allPosts = [...adminPosts, ...defaultBlogPosts];
+
+        // 날짜순 정렬
+        return allPosts.sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate));
+      }
+
       // 블로그 포스트 렌더링
       function renderPosts(posts) {
         const container = document.getElementById('blog-posts');
-        
+
         if (posts.length === 0) {
           container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; margin-top: 40px;">아직 작성된 글이 없습니다.</p>';
           return;
@@ -468,17 +519,20 @@
         });
       }
 
-      // 카테고리 필터링 (예약 업로드 시스템 적용)
+      // 카테고리 필터링 (관리자 포스트 + 예약 업로드 시스템 적용)
       function filterPosts(category) {
-        // 먼저 게시 가능한 포스트만 필터링
-        const publishedPosts = getPublishedPosts(blogPosts);
-        
-        const filtered = category === 'all' 
-          ? publishedPosts 
+        // 모든 포스트 로드 (관리자 포스트 + 기본 포스트)
+        const allPosts = getAllPosts();
+
+        // 게시 가능한 포스트만 필터링
+        const publishedPosts = getPublishedPosts(allPosts);
+
+        const filtered = category === 'all'
+          ? publishedPosts
           : publishedPosts.filter(post => post.category === category);
-        
+
         // 날짜순 정렬 (최신순)
-        filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+        filtered.sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate));
         
         renderPosts(filtered);
 
@@ -519,10 +573,19 @@
           if (e.target.classList.contains('read-more') || e.target.closest('.post-title a')) {
             const postCard = e.target.closest('.post-card');
             const postTitle = postCard.querySelector('.post-title a').textContent;
-            
+
             if (window.Analytics) {
               Analytics.trackBlogInteraction('read_more', postTitle);
             }
+          }
+        });
+
+        // 관리자 모드 단축키 (Ctrl + Alt + A)
+        document.addEventListener('keydown', (e) => {
+          if (e.ctrlKey && e.altKey && e.key === 'A') {
+            e.preventDefault();
+            // 관리자 에디터 페이지로 이동
+            window.location.href = '../blog-admin-editor.html';
           }
         });
       });

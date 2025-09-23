@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔒 Blog Admin Editor - MUMULAB</title>
+    <meta name="robots" content="noindex, nofollow">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 리치 텍스트 에디터 스타일 */
+        .editor-toolbar {
+            border-bottom: 1px solid #e5e7eb;
+            padding: 0.5rem;
+            background: #f9fafb;
+            border-radius: 0.5rem 0.5rem 0 0;
+        }
+
+        .editor-content {
+            min-height: 400px;
+            max-height: 600px;
+            overflow-y: auto;
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-top: none;
+            border-radius: 0 0 0.5rem 0.5rem;
+            background: white;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+        }
+
+        .editor-content:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        /* 프리뷰 스타일 */
+        .preview-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            line-height: 1.6;
+        }
+
+        .preview-content h1, .preview-content h2, .preview-content h3 {
+            color: #2563eb;
+            margin-bottom: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .preview-content h1 { font-size: 2rem; font-weight: bold; }
+        .preview-content h2 { font-size: 1.5rem; font-weight: bold; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.5rem; }
+        .preview-content h3 { font-size: 1.25rem; font-weight: bold; }
+
+        .preview-content p { margin-bottom: 1rem; }
+        .preview-content ul, .preview-content ol { margin: 1rem 0 1rem 1.5rem; }
+        .preview-content li { margin-bottom: 0.5rem; }
+
+        /* 인증 모달 */
+        .auth-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .auth-modal.hidden {
+            display: none;
+        }
+
+        /* 키보드 단축키 표시 */
+        .shortcut-hint {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .shortcut-hint.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- 인증 모달 -->
+    <div id="authModal" class="auth-modal">
+        <div class="bg-white p-8 rounded-lg shadow-2xl max-w-md w-full mx-4">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">🔐 관리자 인증</h2>
+                <p class="text-gray-600">비밀번호를 입력하여 관리자 모드에 접근하세요</p>
+                <div class="text-sm text-gray-500 mt-2">
+                    단축키: <kbd class="bg-gray-200 px-2 py-1 rounded">Ctrl + Alt + A</kbd>
+                </div>
+            </div>
+
+            <form id="authForm">
+                <div class="mb-4">
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                        관리자 비밀번호
+                    </label>
+                    <input
+                        type="password"
+                        id="password"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="비밀번호를 입력하세요"
+                        autocomplete="off"
+                    >
+                </div>
+
+                <div class="flex gap-3">
+                    <button
+                        type="submit"
+                        class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+                    >
+                        로그인
+                    </button>
+                    <button
+                        type="button"
+                        onclick="closeAuthModal()"
+                        class="flex-1 bg-gray-400 text-white py-2 px-4 rounded-md hover:bg-gray-500 transition-colors"
+                    >
+                        취소
+                    </button>
+                </div>
+
+                <div id="authError" class="text-red-600 text-sm mt-3 hidden">
+                    비밀번호가 올바르지 않습니다.
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 키보드 단축키 힌트 -->
+    <div id="shortcutHint" class="shortcut-hint">
+        Ctrl + Alt + A: 관리자 모드
+    </div>
+
+    <!-- 메인 에디터 -->
+    <div id="adminEditor" class="hidden">
+        <div class="container mx-auto px-4 py-8">
+            <!-- 헤더 -->
+            <header class="mb-8">
+                <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded mb-4">
+                    <strong>🔒 관리자 전용 블로그 에디터</strong> - 이 페이지는 인증된 관리자만 접근 가능합니다.
+                </div>
+
+                <div class="flex justify-between items-center">
+                    <h1 class="text-3xl font-bold text-gray-800">📝 블로그 관리자 에디터</h1>
+                    <div class="flex gap-2">
+                        <button onclick="showBlogList()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition-colors">
+                            📋 글 목록
+                        </button>
+                        <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors">
+                            🚪 로그아웃
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- 탭 메뉴 -->
+            <div class="mb-6">
+                <div class="border-b border-gray-200">
+                    <nav class="-mb-px flex space-x-8">
+                        <button
+                            id="editTab"
+                            onclick="switchTab('edit')"
+                            class="py-2 px-1 border-b-2 border-blue-500 font-medium text-sm text-blue-600"
+                        >
+                            ✏️ 편집
+                        </button>
+                        <button
+                            id="previewTab"
+                            onclick="switchTab('preview')"
+                            class="py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700"
+                        >
+                            👁️ 미리보기
+                        </button>
+                        <button
+                            id="listTab"
+                            onclick="switchTab('list')"
+                            class="py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700"
+                        >
+                            📋 글 목록
+                        </button>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- 편집 패널 -->
+            <div id="editPanel" class="grid lg:grid-cols-2 gap-6">
+                <!-- 메타데이터 입력 -->
+                <div class="space-y-4">
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h3 class="text-lg font-semibold mb-4">📊 포스트 정보</h3>
+
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">제목</label>
+                                <input
+                                    type="text"
+                                    id="postTitle"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="블로그 포스트 제목을 입력하세요"
+                                >
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">카테고리</label>
+                                <select id="postCategory" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="AI생산성">AI 생산성</option>
+                                    <option value="시간관리">시간관리</option>
+                                    <option value="모바일AI">모바일 AI</option>
+                                    <option value="음성AI">음성 AI</option>
+                                    <option value="커뮤니케이션">커뮤니케이션</option>
+                                    <option value="정보처리">정보처리</option>
+                                    <option value="개인화AI">개인화 AI</option>
+                                    <option value="언어AI">언어 AI</option>
+                                    <option value="창작AI">창작 AI</option>
+                                    <option value="데이터분석">데이터분석</option>
+                                    <option value="자동화">자동화</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">태그 (쉼표로 구분)</label>
+                                <input
+                                    type="text"
+                                    id="postTags"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="AI, 생산성, 자동화"
+                                >
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">난이도</label>
+                                <select id="postDifficulty" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="초급">초급</option>
+                                    <option value="중급">중급</option>
+                                    <option value="고급">고급</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">요약</label>
+                                <textarea
+                                    id="postSummary"
+                                    rows="3"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="포스트 요약을 작성하세요 (SEO 메타 설명으로 사용됩니다)"
+                                ></textarea>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 flex gap-3">
+                            <button onclick="savePost()" class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">
+                                💾 저장
+                            </button>
+                            <button onclick="publishPost()" class="flex-1 bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors">
+                                🚀 발행
+                            </button>
+                            <button onclick="clearEditor()" class="bg-gray-400 text-white py-2 px-4 rounded-md hover:bg-gray-500 transition-colors">
+                                🗑️ 초기화
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 에디터 -->
+                <div class="space-y-4">
+                    <div class="bg-white rounded-lg shadow">
+                        <!-- 툴바 -->
+                        <div class="editor-toolbar">
+                            <div class="flex flex-wrap gap-2">
+                                <button onclick="formatText('bold')" class="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-sm">
+                                    <strong>B</strong>
+                                </button>
+                                <button onclick="formatText('italic')" class="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-sm">
+                                    <em>I</em>
+                                </button>
+                                <button onclick="formatText('insertUnorderedList')" class="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-sm">
+                                    • 목록
+                                </button>
+                                <button onclick="formatText('insertOrderedList')" class="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-sm">
+                                    1. 번호
+                                </button>
+                                <button onclick="insertHeading(2)" class="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-sm">
+                                    H2
+                                </button>
+                                <button onclick="insertHeading(3)" class="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-sm">
+                                    H3
+                                </button>
+                                <button onclick="insertTemplate()" class="px-3 py-1 bg-blue-200 hover:bg-blue-300 rounded text-sm">
+                                    📋 템플릿
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 에디터 -->
+                        <div
+                            id="contentEditor"
+                            class="editor-content"
+                            contenteditable="true"
+                            data-placeholder="여기에 블로그 내용을 작성하세요..."
+                        ></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 미리보기 패널 -->
+            <div id="previewPanel" class="hidden">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="preview-content" id="previewContent">
+                        <h1>제목을 입력하세요</h1>
+                        <div class="text-gray-600 mb-4 border-b pb-4">
+                            <span>📅 2024-09-23</span> |
+                            <span>📂 카테고리</span> |
+                            <span>⭐ 난이도</span>
+                        </div>
+                        <p>내용을 작성하면 여기에 미리보기가 표시됩니다.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 글 목록 패널 -->
+            <div id="listPanel" class="hidden">
+                <div class="bg-white rounded-lg shadow">
+                    <div class="p-6 border-b">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-lg font-semibold">📋 저장된 블로그 글</h3>
+                            <button onclick="refreshBlogList()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
+                                🔄 새로고침
+                            </button>
+                        </div>
+                    </div>
+                    <div id="blogListContainer" class="p-6">
+                        <!-- 동적으로 생성 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 관리자 인증 설정
+        const ADMIN_PASSWORD = 'mumulab2024!'; // 실제 운영시에는 더 복잡한 인증 시스템 사용
+        const AUTH_STORAGE_KEY = 'mumulab_admin_auth';
+
+        // 현재 편집 중인 포스트 ID
+        let currentPostId = null;
+
+        // 페이지 로드시 초기화
+        document.addEventListener('DOMContentLoaded', () => {
+            // 인증 확인
+            if (isAuthenticated()) {
+                showAdminEditor();
+            } else {
+                showAuthModal();
+            }
+
+            // 키보드 단축키 설정
+            setupKeyboardShortcuts();
+
+            // 에디터 이벤트 설정
+            setupEditor();
+
+            // 힌트 표시
+            showShortcutHint();
+        });
+
+        // 키보드 단축키 설정
+        function setupKeyboardShortcuts() {
+            document.addEventListener('keydown', (e) => {
+                // Ctrl + Alt + A: 관리자 모드 토글
+                if (e.ctrlKey && e.altKey && e.key === 'A') {
+                    e.preventDefault();
+                    if (isAuthenticated()) {
+                        logout();
+                    } else {
+                        showAuthModal();
+                    }
+                }
+
+                // ESC: 모달 닫기
+                if (e.key === 'Escape') {
+                    closeAuthModal();
+                }
+            });
+        }
+
+        // 단축키 힌트 표시
+        function showShortcutHint() {
+            const hint = document.getElementById('shortcutHint');
+            hint.classList.add('show');
+
+            setTimeout(() => {
+                hint.classList.remove('show');
+            }, 3000);
+        }
+
+        // 인증 상태 확인
+        function isAuthenticated() {
+            const auth = sessionStorage.getItem(AUTH_STORAGE_KEY);
+            return auth === 'authenticated';
+        }
+
+        // 인증 모달 표시
+        function showAuthModal() {
+            document.getElementById('authModal').classList.remove('hidden');
+            document.getElementById('password').focus();
+        }
+
+        // 인증 모달 닫기
+        function closeAuthModal() {
+            document.getElementById('authModal').classList.add('hidden');
+            document.getElementById('authError').classList.add('hidden');
+            document.getElementById('password').value = '';
+        }
+
+        // 관리자 에디터 표시
+        function showAdminEditor() {
+            document.getElementById('authModal').classList.add('hidden');
+            document.getElementById('adminEditor').classList.remove('hidden');
+            refreshBlogList();
+        }
+
+        // 인증 처리
+        document.getElementById('authForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const password = document.getElementById('password').value;
+
+            if (password === ADMIN_PASSWORD) {
+                sessionStorage.setItem(AUTH_STORAGE_KEY, 'authenticated');
+                showAdminEditor();
+                closeAuthModal();
+            } else {
+                document.getElementById('authError').classList.remove('hidden');
+                document.getElementById('password').value = '';
+                document.getElementById('password').focus();
+            }
+        });
+
+        // 로그아웃
+        function logout() {
+            sessionStorage.removeItem(AUTH_STORAGE_KEY);
+            document.getElementById('adminEditor').classList.add('hidden');
+            showAuthModal();
+        }
+
+        // 탭 전환
+        function switchTab(tab) {
+            // 탭 버튼 상태 업데이트
+            document.querySelectorAll('[id$="Tab"]').forEach(btn => {
+                btn.className = btn.className.replace('border-blue-500 text-blue-600', 'border-transparent text-gray-500 hover:text-gray-700');
+            });
+
+            document.getElementById(tab + 'Tab').className = document.getElementById(tab + 'Tab').className.replace('border-transparent text-gray-500 hover:text-gray-700', 'border-blue-500 text-blue-600');
+
+            // 패널 표시/숨김
+            document.getElementById('editPanel').classList.toggle('hidden', tab !== 'edit');
+            document.getElementById('previewPanel').classList.toggle('hidden', tab !== 'preview');
+            document.getElementById('listPanel').classList.toggle('hidden', tab !== 'list');
+
+            // 미리보기 업데이트
+            if (tab === 'preview') {
+                updatePreview();
+            }
+
+            // 글 목록 새로고침
+            if (tab === 'list') {
+                refreshBlogList();
+            }
+        }
+
+        // 에디터 설정
+        function setupEditor() {
+            const editor = document.getElementById('contentEditor');
+
+            // 플레이스홀더 처리
+            editor.addEventListener('focus', () => {
+                if (editor.textContent.trim() === '') {
+                    editor.innerHTML = '';
+                }
+            });
+
+            editor.addEventListener('blur', () => {
+                if (editor.textContent.trim() === '') {
+                    editor.innerHTML = '';
+                }
+            });
+
+            // 실시간 미리보기 업데이트
+            editor.addEventListener('input', () => {
+                if (document.getElementById('previewPanel').classList.contains('hidden') === false) {
+                    updatePreview();
+                }
+            });
+        }
+
+        // 텍스트 포맷팅
+        function formatText(command) {
+            document.execCommand(command, false, null);
+            document.getElementById('contentEditor').focus();
+        }
+
+        // 헤딩 삽입
+        function insertHeading(level) {
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                const heading = document.createElement('h' + level);
+                heading.textContent = selection.toString() || '제목을 입력하세요';
+
+                range.deleteContents();
+                range.insertNode(heading);
+
+                // 커서를 헤딩 끝으로 이동
+                range.setStartAfter(heading);
+                range.setEndAfter(heading);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+            document.getElementById('contentEditor').focus();
+        }
+
+        // 템플릿 삽입
+        function insertTemplate() {
+            const template = `<h2>개요</h2>
+<p>이 글에서는 [주제]에 대해 알아보겠습니다.</p>
+
+<h2>주요 기능</h2>
+<ul>
+<li><strong>기능 1</strong>: 설명</li>
+<li><strong>기능 2</strong>: 설명</li>
+<li><strong>기능 3</strong>: 설명</li>
+</ul>
+
+<h2>실행 단계</h2>
+
+<h3>1단계: 준비하기</h3>
+<p>첫 번째 단계에 대한 설명</p>
+
+<h3>2단계: 실행하기</h3>
+<p>두 번째 단계에 대한 설명</p>
+
+<h3>3단계: 최적화</h3>
+<p>세 번째 단계에 대한 설명</p>
+
+<h2>주의사항</h2>
+<ul>
+<li>⚠️ 주의해야 할 점</li>
+<li>💡 유용한 팁</li>
+<li>🔧 문제 해결 방법</li>
+</ul>
+
+<h2>마무리</h2>
+<p>이 글에서 소개한 방법을 통해 [목표]를 달성할 수 있습니다.</p>`;
+
+            document.getElementById('contentEditor').innerHTML = template;
+        }
+
+        // 미리보기 업데이트
+        function updatePreview() {
+            const title = document.getElementById('postTitle').value || '제목을 입력하세요';
+            const category = document.getElementById('postCategory').value;
+            const difficulty = document.getElementById('postDifficulty').value;
+            const content = document.getElementById('contentEditor').innerHTML;
+
+            const previewContent = document.getElementById('previewContent');
+            const today = new Date().toLocaleDateString('ko-KR');
+
+            previewContent.innerHTML = `
+                <h1>${title}</h1>
+                <div class="text-gray-600 mb-4 border-b pb-4">
+                    <span>📅 ${today}</span> |
+                    <span>📂 ${category}</span> |
+                    <span>⭐ ${difficulty}</span>
+                </div>
+                ${content || '<p>내용을 작성하면 여기에 미리보기가 표시됩니다.</p>'}
+            `;
+        }
+
+        // 포스트 저장
+        function savePost() {
+            const postData = {
+                id: currentPostId || Date.now().toString(),
+                title: document.getElementById('postTitle').value,
+                category: document.getElementById('postCategory').value,
+                tags: document.getElementById('postTags').value.split(',').map(tag => tag.trim()),
+                difficulty: document.getElementById('postDifficulty').value,
+                summary: document.getElementById('postSummary').value,
+                content: document.getElementById('contentEditor').innerHTML,
+                created: currentPostId ? getPost(currentPostId)?.created || new Date().toISOString() : new Date().toISOString(),
+                updated: new Date().toISOString(),
+                status: 'draft'
+            };
+
+            if (!postData.title.trim()) {
+                alert('제목을 입력해주세요.');
+                return;
+            }
+
+            savePostToStorage(postData);
+            currentPostId = postData.id;
+
+            alert('포스트가 저장되었습니다.');
+            refreshBlogList();
+        }
+
+        // 포스트 발행
+        function publishPost() {
+            savePost(); // 먼저 저장
+
+            if (currentPostId) {
+                const post = getPost(currentPostId);
+                if (post) {
+                    post.status = 'published';
+                    post.published = new Date().toISOString();
+                    savePostToStorage(post);
+
+                    // HTML 파일 생성
+                    generateHTMLFile(post);
+
+                    alert('포스트가 발행되었습니다!');
+                    refreshBlogList();
+                }
+            }
+        }
+
+        // HTML 파일 생성
+        function generateHTMLFile(post) {
+            const date = new Date(post.published || post.created).toISOString().split('T')[0];
+            const filename = `${date}-${post.title.replace(/[^a-zA-Z0-9가-힣\\s]/g, '').replace(/\\s+/g, '-')}.html`;
+
+            const htmlContent = `<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${post.title} - MUMULAB</title>
+    <meta name="description" content="${post.summary}">
+    <meta name="keywords" content="${post.tags.join(', ')}">
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        .blog-post {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            line-height: 1.6;
+            background: #fff;
+            color: #333;
+        }
+        .post-meta {
+            color: #666;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 1rem;
+        }
+        h1, h2, h3 { color: #2563eb; }
+        h2 { border-bottom: 2px solid #e5e7eb; padding-bottom: 0.5rem; margin-top: 2rem; }
+        ul { margin-left: 1.5rem; margin-bottom: 1rem; }
+        li { margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+    <div class="blog-post">
+        <header>
+            <h1>${post.title}</h1>
+            <div class="post-meta">
+                <span>📅 ${new Date(post.published || post.created).toLocaleDateString('ko-KR')}</span>
+                <span>📂 ${post.category}</span>
+                <span>⭐ ${post.difficulty}</span>
+            </div>
+        </header>
+        <main>
+            ${post.content}
+        </main>
+        <footer>
+            <br><hr><br>
+            <p>🏷️ <strong>태그:</strong> ${post.tags.join(', ')}</p>
+            <a href="../index.html">← 블로그 목록으로 돌아가기</a>
+        </footer>
+    </div>
+</body>
+</html>`;
+
+            // 파일 다운로드
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // 에디터 초기화
+        function clearEditor() {
+            if (confirm('현재 작성 중인 내용이 모두 삭제됩니다. 계속하시겠습니까?')) {
+                document.getElementById('postTitle').value = '';
+                document.getElementById('postCategory').value = 'AI생산성';
+                document.getElementById('postTags').value = '';
+                document.getElementById('postDifficulty').value = '초급';
+                document.getElementById('postSummary').value = '';
+                document.getElementById('contentEditor').innerHTML = '';
+                currentPostId = null;
+            }
+        }
+
+        // 로컬 스토리지 관리
+        function savePostToStorage(post) {
+            const posts = JSON.parse(localStorage.getItem('mumulab_blog_posts') || '[]');
+            const existingIndex = posts.findIndex(p => p.id === post.id);
+
+            if (existingIndex >= 0) {
+                posts[existingIndex] = post;
+            } else {
+                posts.push(post);
+            }
+
+            localStorage.setItem('mumulab_blog_posts', JSON.stringify(posts));
+        }
+
+        function getPost(id) {
+            const posts = JSON.parse(localStorage.getItem('mumulab_blog_posts') || '[]');
+            return posts.find(p => p.id === id);
+        }
+
+        function getAllPosts() {
+            return JSON.parse(localStorage.getItem('mumulab_blog_posts') || '[]');
+        }
+
+        function deletePost(id) {
+            const posts = JSON.parse(localStorage.getItem('mumulab_blog_posts') || '[]');
+            const filtered = posts.filter(p => p.id !== id);
+            localStorage.setItem('mumulab_blog_posts', JSON.stringify(filtered));
+        }
+
+        // 블로그 목록 표시
+        function refreshBlogList() {
+            const posts = getAllPosts().sort((a, b) => new Date(b.updated) - new Date(a.updated));
+            const container = document.getElementById('blogListContainer');
+
+            if (posts.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-8">저장된 블로그 글이 없습니다.</p>';
+                return;
+            }
+
+            container.innerHTML = posts.map(post => `
+                <div class="border border-gray-200 rounded-lg p-4 mb-4 hover:shadow-md transition-shadow">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-lg font-semibold text-gray-800">${post.title}</h3>
+                        <span class="px-2 py-1 text-xs rounded ${post.status === 'published' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}">
+                            ${post.status === 'published' ? '발행됨' : '임시저장'}
+                        </span>
+                    </div>
+
+                    <div class="text-sm text-gray-600 mb-2">
+                        <span>📂 ${post.category}</span> |
+                        <span>⭐ ${post.difficulty}</span> |
+                        <span>📅 ${new Date(post.updated).toLocaleDateString('ko-KR')}</span>
+                    </div>
+
+                    <p class="text-gray-700 text-sm mb-3">${post.summary || '요약이 없습니다.'}</p>
+
+                    <div class="flex gap-2">
+                        <button onclick="editPost('${post.id}')" class="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600">
+                            ✏️ 편집
+                        </button>
+                        <button onclick="duplicatePost('${post.id}')" class="bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600">
+                            📋 복사
+                        </button>
+                        <button onclick="deletePostConfirm('${post.id}')" class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600">
+                            🗑️ 삭제
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 포스트 편집
+        function editPost(id) {
+            const post = getPost(id);
+            if (post) {
+                document.getElementById('postTitle').value = post.title;
+                document.getElementById('postCategory').value = post.category;
+                document.getElementById('postTags').value = post.tags.join(', ');
+                document.getElementById('postDifficulty').value = post.difficulty;
+                document.getElementById('postSummary').value = post.summary;
+                document.getElementById('contentEditor').innerHTML = post.content;
+
+                currentPostId = id;
+                switchTab('edit');
+            }
+        }
+
+        // 포스트 복사
+        function duplicatePost(id) {
+            const post = getPost(id);
+            if (post) {
+                const newPost = {
+                    ...post,
+                    id: Date.now().toString(),
+                    title: post.title + ' (복사본)',
+                    created: new Date().toISOString(),
+                    updated: new Date().toISOString(),
+                    status: 'draft'
+                };
+                delete newPost.published;
+
+                savePostToStorage(newPost);
+                refreshBlogList();
+                alert('포스트가 복사되었습니다.');
+            }
+        }
+
+        // 포스트 삭제 확인
+        function deletePostConfirm(id) {
+            const post = getPost(id);
+            if (post && confirm(`"${post.title}" 글을 삭제하시겠습니까?`)) {
+                deletePost(id);
+                refreshBlogList();
+
+                if (currentPostId === id) {
+                    clearEditor();
+                }
+            }
+        }
+
+        // 글 목록 표시 (탭에서 호출)
+        function showBlogList() {
+            switchTab('list');
+        }
+    </script>
+</body>
+</html>

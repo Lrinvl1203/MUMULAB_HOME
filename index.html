@@ -28,5 +28,15 @@
       <div class="title">MUMULAB</div>
       <div class="enter"><a href="app.html">[Enter to MUMULAB]</a></div>
     </div>
+
+    <script>
+      // 관리자 모드 단축키: Ctrl + Alt + A
+      document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.altKey && e.key === 'a') {
+          e.preventDefault();
+          window.location.href = 'blog-admin-editor.html';
+        }
+      });
+    </script>
   </body>
 </html>
