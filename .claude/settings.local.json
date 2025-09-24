@@ -20,7 +20,15 @@
       "mcp__playwright__browser_press_key",
       "mcp__playwright__browser_type",
       "Bash(chmod:*)",
-      "Bash(.github/scripts/generate-all-blog-posts.sh:*)"
+      "Bash(.github/scripts/generate-all-blog-posts.sh:*)",
+      "Bash(for:*)",
+      "Bash(do)",
+      "Bash(echo:*)",
+      "Bash(if grep -q \"admin-global.js\" \"$file\")",
+      "Bash(then)",
+      "Bash(else)",
+      "Bash(fi)",
+      "Bash(done)"
     ],
     "deny": [],
     "ask": []

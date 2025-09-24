@@ -30,8 +30,12 @@
             // 관리자 대시보드로 이동 (상대 경로 계산)
             let adminUrl;
 
-            if (currentPath.includes('/blog/')) {
-                // 블로그 서브 디렉토리에서 접근
+            if (currentPath.includes('/blog/') ||
+                currentPath.includes('/tools/') ||
+                currentPath.includes('/info/') ||
+                currentPath.includes('/support/') ||
+                currentPath.includes('/apps/')) {
+                // 서브 디렉토리에서 접근
                 adminUrl = '../admin-dashboard.html';
             } else {
                 // 루트 디렉토리에서 접근
