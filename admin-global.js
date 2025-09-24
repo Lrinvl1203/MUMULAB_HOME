@@ -19,6 +19,14 @@
                 return; // 이미 관리자 대시보드에 있음
             }
 
+            // 관리자 모드 진입 전 현재 페이지 저장
+            if (typeof AdminAuth !== 'undefined' && AdminAuth.saveReferrerPage) {
+                AdminAuth.saveReferrerPage();
+            } else {
+                // AdminAuth가 로드되지 않았으면 직접 저장
+                sessionStorage.setItem('admin_referrer_page', window.location.href);
+            }
+
             // 관리자 대시보드로 이동 (상대 경로 계산)
             let adminUrl;
 

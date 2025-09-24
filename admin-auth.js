@@ -54,14 +54,51 @@ function authenticate(password) {
  * 로그아웃
  */
 function logout() {
+    // 현재 페이지가 관리자 페이지인지 확인
+    const currentPath = window.location.pathname;
+    const isAdminPage = currentPath.includes('admin-') || currentPath.includes('blog-admin-');
+
+    // 세션 정리
     sessionStorage.removeItem(ADMIN_AUTH.STORAGE_KEY);
     localStorage.removeItem('mumulab_admin_session'); // 추가 정리
+
+    if (isAdminPage) {
+        // 관리자 페이지에서 로그아웃하면 저장된 리퍼러 페이지 또는 기본 페이지로
+        const savedReferrer = sessionStorage.getItem('admin_referrer_page');
+
+        if (savedReferrer && !savedReferrer.includes('admin')) {
+            // 저장된 리퍼러가 있고 관리자 페이지가 아니면 그곳으로
+            sessionStorage.removeItem('admin_referrer_page'); // 사용 후 정리
+            window.location.href = savedReferrer;
+        } else if (currentPath.includes('/blog/')) {
+            // 블로그 서브디렉토리에서 온 경우 블로그 홈으로
+            window.location.href = '../blog/index.html';
+        } else {
+            // 그 외의 경우 메인 홈으로
+            window.location.href = 'index.html';
+        }
+    }
+}
+
+/**
+ * 관리자 모드 진입 전 페이지 저장
+ */
+function saveReferrerPage() {
+    const currentPath = window.location.pathname;
+    const isAdminPage = currentPath.includes('admin-') || currentPath.includes('blog-admin-');
+
+    if (!isAdminPage) {
+        // 관리자 페이지가 아닌 경우에만 현재 페이지를 저장
+        sessionStorage.setItem('admin_referrer_page', window.location.href);
+    }
 }
 
 /**
  * 인증 모달 생성 및 표시
  */
 function showAuthModal(onSuccess) {
+    // 관리자 모드 진입 전 페이지 저장
+    saveReferrerPage();
     // 기존 모달이 있다면 제거
     const existingModal = document.getElementById('adminAuthModal');
     if (existingModal) {
@@ -83,7 +120,7 @@ function showAuthModal(onSuccess) {
                     <label for="adminPassword" class="block text-sm font-medium text-gray-700 mb-2">비밀번호</label>
                     <input type="password"
                            id="adminPassword"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                            placeholder="관리자 비밀번호 입력">
                 </div>
 
@@ -246,6 +283,7 @@ if (typeof window !== 'undefined') {
         showAuthModal,
         protectAdminPage,
         navigateToAdminPage,
-        getAuthInfo
+        getAuthInfo,
+        saveReferrerPage
     };
 }
