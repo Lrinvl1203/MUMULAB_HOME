@@ -11,6 +11,7 @@
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="admin-auth.js"></script>
 
     <!-- Custom Styles -->
     <style>
@@ -333,7 +334,8 @@
         // 기능별 함수들
         function openBlogEditor() {
             addActivity('블로그 에디터 접근', '블로그 포스트 작성 화면으로 이동');
-            window.open('blog-admin-editor.html', '_blank');
+            // 인증된 상태에서는 바로 이동, 아니면 인증 후 이동
+            AdminAuth.navigateToAdminPage('blog-admin-editor.html', '_blank');
         }
 
         function openAutoPublisher() {
@@ -360,6 +362,21 @@
             addActivity('시스템 설정 접근', '전체 시스템 설정 화면 접근');
             alert('🚧 시스템 설정 기능은 개발 중입니다.\n\n계획된 설정:\n- 사이트 기본 정보\n- 블로그 설정\n- 자동화 설정\n- 보안 설정');
         }
+
+        // 페이지 로드 시 인증 확인
+        document.addEventListener('DOMContentLoaded', function() {
+            AdminAuth.protectAdminPage(function() {
+                // 인증 성공 시 대시보드 초기화
+                loadDashboardData();
+                addActivity('관리자 대시보드 접근', '시스템 관리 화면 로드 완료');
+
+                // 인증 정보 표시
+                const authInfo = AdminAuth.getAuthInfo();
+                if (authInfo) {
+                    console.log(`🔐 관리자 세션 활성 (남은 시간: ${authInfo.remainingHours}시간)`);
+                }
+            });
+        });
 
         // 전역 관리자 액세스 스크립트 포함
         document.addEventListener('keydown', function(e) {
