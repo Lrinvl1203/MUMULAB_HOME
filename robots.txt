@@ -1,0 +1,24 @@
+User-agent: *
+Allow: /
+
+# Allow all important content
+Allow: /blog/
+Allow: /tools/
+Allow: /info/
+Allow: /support/
+
+# Block admin and system files
+Disallow: /admin-dashboard.html
+Disallow: /blog-admin-editor.html
+Disallow: /*admin*
+Disallow: /*.js$
+Disallow: /*.css$
+
+# Block development and temp files
+Disallow: /auto-blog-integration.html
+
+# XML Sitemap
+Sitemap: https://mumulab.netlify.app/sitemap.xml
+
+# Crawl delay to be respectful
+Crawl-delay: 1

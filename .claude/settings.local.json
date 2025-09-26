@@ -28,7 +28,9 @@
       "Bash(then)",
       "Bash(else)",
       "Bash(fi)",
-      "Bash(done)"
+      "Bash(done)",
+      "WebFetch(domain:support.google.com)",
+      "WebSearch"
     ],
     "deny": [],
     "ask": []
