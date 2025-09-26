@@ -30,7 +30,8 @@
       "Bash(fi)",
       "Bash(done)",
       "WebFetch(domain:support.google.com)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(rm:*)"
     ],
     "deny": [],
     "ask": []
