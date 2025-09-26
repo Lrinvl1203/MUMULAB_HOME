@@ -18,7 +18,7 @@ Disallow: /*.css$
 Disallow: /auto-blog-integration.html
 
 # XML Sitemap
-Sitemap: https://mumulab.netlify.app/sitemap.xml
+Sitemap: https://mumulabshome.netlify.app/sitemap.xml
 
 # Crawl delay to be respectful
 Crawl-delay: 1
