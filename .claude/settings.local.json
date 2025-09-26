@@ -31,7 +31,9 @@
       "Bash(done)",
       "WebFetch(domain:support.google.com)",
       "WebSearch",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(cat:*)",
+      "WebFetch(domain:mumulabshome.netlify.app)"
     ],
     "deny": [],
     "ask": []
