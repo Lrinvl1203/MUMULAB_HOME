@@ -45,7 +45,36 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- Additional High-Quality Blog Content -->
+  <!-- Coming Soon Blog Posts -->
+  <url>
+    <loc>https://mumulabshome.netlify.app/blog/posts/2025-09-27-ChatGPT로-이메일-작성-시간-90-단축하기.html</loc>
+    <lastmod>2025-09-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://mumulabshome.netlify.app/blog/posts/2025-09-28-AI-요약-도구로-정보-과부하-해결하기.html</loc>
+    <lastmod>2025-09-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://mumulabshome.netlify.app/blog/posts/2025-09-29-개인-맞춤형-AI-비서-만들기--GPT-커스텀-활용법.html</loc>
+    <lastmod>2025-09-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://mumulabshome.netlify.app/blog/posts/2025-09-30-AI-번역으로-글로벌-소통의-벽-허물기.html</loc>
+    <lastmod>2025-09-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Additional Blog Content -->
   <url>
     <loc>https://mumulabshome.netlify.app/blog/posts/ai-coding-assistant-comparison.html</loc>
     <lastmod>2025-09-26</lastmod>
