@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>자주 묻는 질문 (FAQ) - MUMULAB</title>
+    <meta name="description" content="MUMULAB AI 생산성 도구와 프로젝트 관리 플랫폼에 대한 자주 묻는 질문과 답변. 사용법, 가격, 기능, 지원 등에 대한 상세한 정보를 확인하세요.">
+    <link rel="stylesheet" href="../style.css" />
+
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-R96NX2MK78"></script>
+    <script src="../analytics.js"></script>
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1818115573259604"
+         crossorigin="anonymous"></script>
+
+    <!-- Structured Data -->
+    <script src="../structured-data.js"></script>
+
+    <!-- 관리자 모드 글로벌 액세스 -->
+    <script src="../admin-global.js"></script>
+    <style>
+      body { background: var(--bg-primary); color: var(--text-primary); user-select: text; overflow: auto; }
+      .container { max-width: 800px; margin: 96px auto 64px; padding: 0 24px; line-height: 1.7; }
+
+      /* FAQ Styles */
+      .faq-section { margin: 48px 0; }
+      .faq-item {
+        border: 1px solid var(--border-color, #333);
+        border-radius: 8px;
+        margin: 16px 0;
+        background: var(--bg-secondary, #111);
+      }
+      .faq-question {
+        padding: 20px;
+        cursor: pointer;
+        border-bottom: 1px solid var(--border-color, #333);
+        font-weight: 600;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .faq-question:hover { background: var(--bg-hover, #222); }
+      .faq-answer {
+        padding: 20px;
+        display: none;
+        border-top: 1px solid var(--border-color, #333);
+      }
+      .faq-answer.active { display: block; }
+      .faq-toggle { font-size: 18px; transition: transform 0.3s; }
+      .faq-toggle.active { transform: rotate(180deg); }
+
+      /* Navigation */
+      .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 72px;
+        background: var(--bg-primary);
+        border-bottom: 1px solid var(--border-color, #333);
+        z-index: 100;
+      }
+      .nav {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+      .nav-brand { font-weight: 800; font-size: 20px; margin-right: auto; }
+      .nav-links { display: flex; gap: 32px; }
+      .nav-links a { color: var(--text-secondary); text-decoration: none; font-weight: 500; }
+      .nav-links a:hover { color: var(--text-primary); }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="nav">
+        <div class="nav-brand">MUMULAB</div>
+        <div class="nav-links">
+          <a href="../">홈</a>
+          <a href="../app.html">앱</a>
+          <a href="../blog/">블로그</a>
+          <a href="../tools/">도구</a>
+          <a href="../info/">정보</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <h1>자주 묻는 질문 (FAQ)</h1>
+      <p>MUMULAB 사용에 관한 궁금한 점들을 정리했습니다. 찾으시는 답변이 없다면 <a href="../support/">지원 페이지</a>를 통해 문의해주세요.</p>
+
+      <div class="faq-section">
+        <h2>🚀 시작하기</h2>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <span>MUMULAB은 무엇인가요?</span>
+            <span class="faq-toggle">▼</span>
+          </div>
+          <div class="faq-answer">
+            <p>MUMULAB은 AI 생산성 도구와 프로젝트 관리 솔루션을 제공하는 플랫폼입니다. ChatGPT, Claude, GitHub Copilot 등 최신 AI 도구 활용법부터 실전 프로젝트 관리, 디지털 노마드 도구까지 개발자와 크리에이터의 업무 효율성을 극대화하는 다양한 리소스를 제공합니다.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <span>무료로 사용할 수 있나요?</span>
+            <span class="faq-toggle">▼</span>
+          </div>
+          <div class="faq-answer">
+            <p>네, MUMULAB의 모든 도구와 블로그 콘텐츠는 완전 무료로 제공됩니다. 블로그 작성기, SEO 분석기, 프로젝트 관리 도구 등을 회원가입 없이 바로 사용하실 수 있습니다.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <span>어떤 사람들에게 도움이 되나요?</span>
+            <span class="faq-toggle">▼</span>
+          </div>
+          <div class="faq-answer">
+            <p>주로 다음과 같은 분들에게 도움이 됩니다:</p>
+            <ul>
+              <li><strong>개발자</strong>: AI 코딩 도구 활용으로 생산성 4배 향상</li>
+              <li><strong>프로젝트 매니저</strong>: AI 기반 일정 관리와 리스크 예측</li>
+              <li><strong>콘텐츠 크리에이터</strong>: 블로그 작성, SEO 최적화 자동화</li>
+              <li><strong>디지털 노마드</strong>: 원격 근무 효율화 도구</li>
+              <li><strong>스타트업 창업자</strong>: 비용 효율적인 업무 자동화</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-section">
+        <h2>🛠️ 도구 사용법</h2>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <span>AI 블로그 작성기는 어떻게 사용하나요?</span>
+            <span class="faq-toggle">▼</span>
+          </div>
+          <div class="faq-answer">
+            <p>AI 블로그 작성기 사용법:</p>
+            <ol>
+              <li><strong>주제 입력</strong>: 작성하고 싶은 블로그 주제를 입력합니다</li>
+              <li><strong>스타일 선택</strong>: 기술 블로그, 개인 경험담, 가이드 등 스타일을 선택합니다</li>
+              <li><strong>키워드 설정</strong>: SEO에 중요한 키워드를 2-3개 설정합니다</li>
+              <li><strong>생성 및 편집</strong>: AI가 초안을 생성하면 개인 경험을 추가하여 완성합니다</li>
+            </ol>
+            <p>보통 30분 내에 1,500단어 이상의 고품질 블로그 포스트를 작성할 수 있습니다.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <span>SEO 분석기의 정확도는 어느 정도인가요?</span>
+            <span class="faq-toggle">▼</span>
+          </div>
+          <div class="faq-answer">
+            <p>SEO 분석기는 다음과 같은 정확도를 보입니다:</p>
+            <ul>
+              <li><strong>키워드 밀도 분석</strong>: 95% 정확도</li>
+              <li><strong>메타 태그 검증</strong>: 100% 정확도</li>
+              <li><strong>페이지 속도 분석</strong>: Google PageSpeed와 90% 일치</li>
+              <li><strong>모바일 최적화</strong>: Google Mobile-Friendly Test와 95% 일치</li>
+            </ul>
+            <p>실제 Google 검색 결과 개선까지는 2-4주가 소요됩니다.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <span>프로젝트 관리 도구에서 팀 협업이 가능한가요?</span>
+            <span class="faq-toggle">▼</span>
+          </div>
+          <div class="faq-answer">
+            <p>현재는 개인 사용자를 위한 도구로 설계되어 있지만, 다음과 같은 협업 기능을 제공합니다:</p>
+            <ul>
+              <li><strong>링크 공유</strong>: 프로젝트 현황을 링크로 공유 가능</li>
+              <li><strong>엑셀 내보내기</strong>: 팀원들과 데이터 공유 가능</li>
+              <li><strong>Slack 연동</strong>: 진행 상황을 Slack으로 자동 알림</li>
+              <li><strong>이메일 리포트</strong>: 주간 진행 보고서 자동 발송</li>
+            </ul>
+            <p>완전한 팀 협업 기능은 2025년 하반기에 출시 예정입니다.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-section">
+        <h2>💡 AI 도구 활용</h2>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <span>ChatGPT와 Claude 중 어떤 것을 먼저 배워야 할까요?</span>
+            <span class="faq-toggle">▼</span>
+          </div>
+          <div class="faq-answer">
+            <p>사용 목적에 따라 다릅니다:</p>
+            <div style="display: flex; gap: 32px; margin: 16px 0;">
+              <div style="flex: 1;">
+                <h4>ChatGPT 추천 상황</h4>
+                <ul>
+                  <li>빠른 아이디어 브레인스토밍</li>
+                  <li>일상적인 업무 자동화</li>
+                  <li>마케팅 콘텐츠 작성</li>
+                  <li>음성 대화 기능 활용</li>
+                </ul>
+              </div>
+              <div style="flex: 1;">
+                <h4>Claude 추천 상황</h4>
+                <ul>
+                  <li>장문의 문서 분석</li>
+                  <li>복잡한 코딩 문제</li>
+                  <li>상세한 분석 보고서</li>
+                  <li>안전하고 정확한 답변</li>
+                </ul>
+              </div>
+            </div>
+            <p>초보자라면 ChatGPT부터 시작하여 기본기를 익힌 후 Claude로 확장하는 것을 추천합니다.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <span>AI 도구로 실제로 얼마나 시간을 절약할 수 있나요?</span>
+            <span class="faq-toggle">▼</span>
+          </div>
+          <div class="faq-answer">
+            <p>실제 사용자들의 평균 시간 절약 효과입니다:</p>
+            <ul>
+              <li><strong>블로그 작성</strong>: 3시간 → 30분 (83% 절약)</li>
+              <li><strong>코드 작성</strong>: 8시간 → 2시간 (75% 절약)</li>
+              <li><strong>이메일 작성</strong>: 30분 → 5분 (83% 절약)</li>
+              <li><strong>회의록 정리</strong>: 1시간 → 10분 (83% 절약)</li>
+              <li><strong>프로젝트 계획</strong>: 4시간 → 1시간 (75% 절약)</li>
+            </ul>
+            <p>평균적으로 <strong>하루 2-3시간</strong>의 시간을 절약할 수 있으며, 숙련될수록 더 큰 효과를 경험합니다.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-section">
+        <h2>🔧 기술 지원</h2>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <span>도구가 작동하지 않을 때는 어떻게 해야 하나요?</span>
+            <span class="faq-toggle">▼</span>
+          </div>
+          <div class="faq-answer">
+            <p>다음 순서로 문제를 해결해보세요:</p>
+            <ol>
+              <li><strong>페이지 새로고침</strong>: F5 키 또는 Ctrl+R</li>
+              <li><strong>브라우저 캐시 삭제</strong>: Ctrl+Shift+Delete</li>
+              <li><strong>다른 브라우저 시도</strong>: Chrome, Firefox, Safari 등</li>
+              <li><strong>인터넷 연결 확인</strong>: 다른 사이트 접속 테스트</li>
+              <li><strong>지원팀 문의</strong>: support@mumulab.com</li>
+            </ol>
+            <p>대부분의 문제는 1-2단계에서 해결됩니다.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <span>모바일에서도 사용할 수 있나요?</span>
+            <span class="faq-toggle">▼</span>
+          </div>
+          <div class="faq-answer">
+            <p>네, 모든 MUMULAB 도구는 모바일 최적화되어 있습니다:</p>
+            <ul>
+              <li><strong>반응형 디자인</strong>: 모든 화면 크기에 최적화</li>
+              <li><strong>터치 인터페이스</strong>: 모바일 터치 조작 지원</li>
+              <li><strong>빠른 로딩</strong>: 모바일 네트워크 최적화</li>
+              <li><strong>오프라인 기능</strong>: 일부 도구는 오프라인 사용 가능</li>
+            </ul>
+            <p>iOS Safari, Android Chrome에서 최적의 성능을 제공합니다.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-section">
+        <h2>📈 향후 계획</h2>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <span>새로운 기능은 언제 추가되나요?</span>
+            <span class="faq-toggle">▼</span>
+          </div>
+          <div class="faq-answer">
+            <p>MUMULAB 로드맵:</p>
+            <ul>
+              <li><strong>2025년 1월</strong>: AI 이미지 생성 도구</li>
+              <li><strong>2025년 3월</strong>: 팀 협업 기능</li>
+              <li><strong>2025년 6월</strong>: API 제공</li>
+              <li><strong>2025년 9월</strong>: 모바일 앱 출시</li>
+            </ul>
+            <p>새로운 기능은 <a href="../blog/">블로그</a>를 통해 먼저 공지됩니다.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin: 64px 0; padding: 32px; background: var(--bg-secondary, #111); border-radius: 8px; text-align: center;">
+        <h3>더 궁금한 점이 있으신가요?</h3>
+        <p>FAQ에서 답을 찾지 못하셨다면 언제든지 문의해주세요.</p>
+        <a href="../support/" style="display: inline-block; padding: 12px 24px; background: #6366f1; color: white; text-decoration: none; border-radius: 6px; margin-top: 16px;">지원팀 문의하기</a>
+      </div>
+    </div>
+
+    <script>
+      function toggleFAQ(element) {
+        const answer = element.nextElementSibling;
+        const toggle = element.querySelector('.faq-toggle');
+
+        if (answer.classList.contains('active')) {
+          answer.classList.remove('active');
+          toggle.classList.remove('active');
+        } else {
+          // Close all other FAQs
+          document.querySelectorAll('.faq-answer.active').forEach(item => {
+            item.classList.remove('active');
+          });
+          document.querySelectorAll('.faq-toggle.active').forEach(item => {
+            item.classList.remove('active');
+          });
+
+          // Open clicked FAQ
+          answer.classList.add('active');
+          toggle.classList.add('active');
+        }
+      }
+
+      // Add FAQ Schema
+      const faqSchema = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "MUMULAB은 무엇인가요?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "MUMULAB은 AI 생산성 도구와 프로젝트 관리 솔루션을 제공하는 플랫폼입니다. ChatGPT, Claude, GitHub Copilot 등 최신 AI 도구 활용법부터 실전 프로젝트 관리, 디지털 노마드 도구까지 개발자와 크리에이터의 업무 효율성을 극대화하는 다양한 리소스를 제공합니다."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "무료로 사용할 수 있나요?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "네, MUMULAB의 모든 도구와 블로그 콘텐츠는 완전 무료로 제공됩니다. 블로그 작성기, SEO 분석기, 프로젝트 관리 도구 등을 회원가입 없이 바로 사용하실 수 있습니다."
+            }
+          }
+        ]
+      };
+
+      const script = document.createElement('script');
+      script.type = 'application/ld+json';
+      script.textContent = JSON.stringify(faqSchema);
+      document.head.appendChild(script);
+    </script>
+  </body>
+</html>
