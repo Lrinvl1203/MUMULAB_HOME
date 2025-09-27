@@ -33,7 +33,11 @@
       "WebSearch",
       "Bash(rm:*)",
       "Bash(cat:*)",
-      "WebFetch(domain:mumulabshome.netlify.app)"
+      "WebFetch(domain:mumulabshome.netlify.app)",
+      "Bash(npx chrome-devtools:*)",
+      "Bash(npm search:*)",
+      "Bash(npm install:*)",
+      "Bash(npx chrome-devtools-mcp:*)"
     ],
     "deny": [],
     "ask": []
