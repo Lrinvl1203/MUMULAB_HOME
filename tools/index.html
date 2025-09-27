@@ -34,6 +34,34 @@
         text-align: center;
         margin-bottom: 48px;
       }
+
+      .section-header {
+        text-align: center;
+        margin: 48px 0 32px;
+      }
+
+      .section-title {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        background: var(--gradient-accent);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .section-subtitle {
+        font-size: 16px;
+        color: var(--text-secondary);
+      }
+
+      .section-divider {
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+        margin: 32px auto;
+        max-width: 200px;
+        border-radius: 1px;
+      }
       
       .page-title {
         font-size: 36px;
@@ -88,6 +116,12 @@
         margin-bottom: 12px;
         filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.2));
         transition: transform 0.2s ease;
+      }
+
+      .app-icon img {
+        width: 48px;
+        height: 48px;
+        object-fit: contain;
       }
       
       .app-card:hover .app-icon {
@@ -386,9 +420,26 @@
         <p class="page-subtitle">생산성을 높이는 AI 기반 도구 모음</p>
       </div>
 
-      <!-- 앱 그리드 (기본 보기) -->
-      <div class="apps-grid" id="apps-grid">
-        <!-- 앱들이 JavaScript로 동적으로 로드됩니다 -->
+      <!-- 첫 번째 섹션: 하루가 25시간이 되는 AI 도구 -->
+      <div class="section-header">
+        <h2 class="section-title">하루가 25시간이 되는 AI 도구</h2>
+        <p class="section-subtitle">시간을 절약하고 생산성을 높이는 핵심 도구들</p>
+        <div class="section-divider"></div>
+      </div>
+
+      <div class="apps-grid" id="apps-grid-section1">
+        <!-- 첫 번째 섹션 앱들이 JavaScript로 동적으로 로드됩니다 -->
+      </div>
+
+      <!-- 두 번째 섹션: 하루를 25시간을 만드는 시크릿 -->
+      <div class="section-header">
+        <h2 class="section-title">하루를 25시간으로 만드는 시크릿</h2>
+        <p class="section-subtitle">업무 효율성을 극대화하는 전문가 도구</p>
+        <div class="section-divider"></div>
+      </div>
+
+      <div class="apps-grid" id="apps-grid-section2">
+        <!-- 두 번째 섹션 앱들이 JavaScript로 동적으로 로드됩니다 -->
       </div>
 
       <!-- 앱 뷰어 (앱 실행 시 보기) -->
@@ -417,8 +468,8 @@
     </div>
 
     <script>
-      // 앱 데이터 시스템
-      const apps = [
+      // 앱 데이터 시스템 - 섹션별로 구분
+      const appsSection1 = [
         {
           id: 'blog-writer',
           name: '블로그 글쓰기 AI',
@@ -445,11 +496,33 @@
         }
       ];
 
+      const appsSection2 = [
+        {
+          id: 'mumulab-notion',
+          name: 'MUMULAB Notion',
+          description: '전문가 템플릿과 워크플로우 모음',
+          icon: '<img src="./assets/notion-icon.svg" alt="Notion"/>',
+          url: '#notion-links',
+          comingSoon: false,
+          isInternal: true
+        },
+        {
+          id: 'mumulab-ai-studio',
+          name: 'MUMULAB AI Studio',
+          description: '맞춤형 AI 솔루션과 도구 모음',
+          icon: '<img src="./assets/ai-icon.svg" alt="AI Studio"/>',
+          url: '#ai-studio-links',
+          comingSoon: false,
+          isInternal: true
+        }
+      ];
+
       // 현재 로드된 앱 정보
       let currentApp = null;
 
       // 앱 뷰어 요소들
-      const appGrid = document.getElementById('apps-grid');
+      const appGridSection1 = document.getElementById('apps-grid-section1');
+      const appGridSection2 = document.getElementById('apps-grid-section2');
       const appViewer = document.getElementById('app-viewer');
       const currentAppTitle = document.getElementById('current-app-title');
       const appIframe = document.getElementById('app-iframe');
@@ -459,29 +532,35 @@
 
       // 앱 로드 함수
       function loadApp(app) {
+        // 내부 링크 섹션인 경우 특별 처리
+        if (app.isInternal) {
+          showLinkSection(app);
+          return;
+        }
+
         currentApp = app;
         currentAppTitle.textContent = app.name;
-        
+
         // Track app launch
         if (window.Analytics) {
           Analytics.trackAppLaunch(app.name, 'inline');
           Analytics.trackToolUsage(app.name, 'open');
         }
-        
+
         // 뷰 전환
-        appGrid.style.display = 'none';
+        hideAllGrids();
         appViewer.style.display = 'block';
-        
+
         // 로딩 표시
         loadingIndicator.style.display = 'block';
         appIframe.style.display = 'none';
-        
+
         // iframe 로드
         appIframe.src = app.url;
         appIframe.onload = () => {
           loadingIndicator.style.display = 'none';
           appIframe.style.display = 'block';
-          
+
           // Track successful app load
           if (window.Analytics) {
             Analytics.trackCustomEvent('app_loaded', {
@@ -492,17 +571,77 @@
         };
       }
 
+      // 모든 그리드 숨기기
+      function hideAllGrids() {
+        appGridSection1.style.display = 'none';
+        appGridSection2.style.display = 'none';
+        document.querySelectorAll('.section-header').forEach(header => {
+          header.style.display = 'none';
+        });
+      }
+
+      // 모든 그리드 보이기
+      function showAllGrids() {
+        appGridSection1.style.display = 'grid';
+        appGridSection2.style.display = 'grid';
+        document.querySelectorAll('.section-header').forEach(header => {
+          header.style.display = 'block';
+        });
+      }
+
+      // 링크 섹션 표시 함수
+      function showLinkSection(app) {
+        hideAllGrids();
+        appViewer.style.display = 'block';
+        currentAppTitle.textContent = app.name;
+
+        // 로딩 숨기고 커스텀 콘텐츠 표시
+        loadingIndicator.style.display = 'none';
+        appIframe.style.display = 'none';
+
+        let linksHtml = '';
+        if (app.id === 'mumulab-notion') {
+          linksHtml = generateNotionLinks();
+        } else if (app.id === 'mumulab-ai-studio') {
+          linksHtml = generateAIStudioLinks();
+        }
+
+        // 임시 콘텐츠 컨테이너 생성
+        let linkContainer = document.getElementById('link-container');
+        if (!linkContainer) {
+          linkContainer = document.createElement('div');
+          linkContainer.id = 'link-container';
+          linkContainer.style.cssText = `
+            padding: 24px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            height: 100%;
+            overflow-y: auto;
+          `;
+          document.querySelector('.app-content').appendChild(linkContainer);
+        }
+
+        linkContainer.innerHTML = linksHtml;
+        linkContainer.style.display = 'block';
+      }
+
       // 앱 리스트로 돌아가기
       function backToAppList() {
         // Track app close
         if (currentApp && window.Analytics) {
           Analytics.trackToolUsage(currentApp.name, 'close');
         }
-        
+
         appViewer.style.display = 'none';
-        appGrid.style.display = 'grid';
+        showAllGrids();
         currentApp = null;
         appIframe.src = '';
+
+        // 링크 컨테이너 숨기기
+        const linkContainer = document.getElementById('link-container');
+        if (linkContainer) {
+          linkContainer.style.display = 'none';
+        }
       }
 
       // 전체 페이지로 열기
@@ -520,11 +659,73 @@
         }
       }
 
+      // Notion 링크 생성 함수
+      function generateNotionLinks() {
+        return `
+          <div style="color: var(--text-primary);">
+            <h3 style="margin-bottom: 24px; color: var(--accent-primary);">📋 MUMULAB Notion 템플릿</h3>
+            <div style="display: grid; gap: 16px;">
+              <div style="padding: 16px; background: var(--bg-tertiary); border-radius: var(--radius-md); border: 1px solid var(--border-primary);">
+                <h4 style="margin: 0 0 8px 0;">🎯 프로젝트 관리 템플릿</h4>
+                <p style="margin: 0 0 12px 0; color: var(--text-secondary); font-size: 14px;">완벽한 프로젝트 라이프사이클 관리</p>
+                <a href="#" onclick="alert('향후 연동 예정입니다')" style="color: var(--accent-primary); text-decoration: none; font-size: 14px;">템플릿 보기 →</a>
+              </div>
+              <div style="padding: 16px; background: var(--bg-tertiary); border-radius: var(--radius-md); border: 1px solid var(--border-primary);">
+                <h4 style="margin: 0 0 8px 0;">📊 업무 대시보드</h4>
+                <p style="margin: 0 0 12px 0; color: var(--text-secondary); font-size: 14px;">일일 업무와 목표 추적</p>
+                <a href="#" onclick="alert('향후 연동 예정입니다')" style="color: var(--accent-primary); text-decoration: none; font-size: 14px;">템플릿 보기 →</a>
+              </div>
+              <div style="padding: 16px; background: var(--bg-tertiary); border-radius: var(--radius-md); border: 1px solid var(--border-primary);">
+                <h4 style="margin: 0 0 8px 0;">📚 지식 베이스</h4>
+                <p style="margin: 0 0 12px 0; color: var(--text-secondary); font-size: 14px;">체계적인 정보 관리 시스템</p>
+                <a href="#" onclick="alert('향후 연동 예정입니다')" style="color: var(--accent-primary); text-decoration: none; font-size: 14px;">템플릿 보기 →</a>
+              </div>
+              <div style="padding: 16px; background: var(--bg-tertiary); border-radius: var(--radius-md); border: 1px solid var(--border-primary);">
+                <h4 style="margin: 0 0 8px 0;">🎨 크리에이터 워크플로우</h4>
+                <p style="margin: 0 0 12px 0; color: var(--text-secondary); font-size: 14px;">콘텐츠 제작과 스케줄링</p>
+                <a href="#" onclick="alert('향후 연동 예정입니다')" style="color: var(--accent-primary); text-decoration: none; font-size: 14px;">템플릿 보기 →</a>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // AI Studio 링크 생성 함수
+      function generateAIStudioLinks() {
+        return `
+          <div style="color: var(--text-primary);">
+            <h3 style="margin-bottom: 24px; color: var(--accent-primary);">🤖 MUMULAB AI Studio</h3>
+            <div style="display: grid; gap: 16px;">
+              <div style="padding: 16px; background: var(--bg-tertiary); border-radius: var(--radius-md); border: 1px solid var(--border-primary);">
+                <h4 style="margin: 0 0 8px 0;">💡 맞춤형 GPT 모델</h4>
+                <p style="margin: 0 0 12px 0; color: var(--text-secondary); font-size: 14px;">전문 분야별 최적화된 AI 어시스턴트</p>
+                <a href="#" onclick="alert('향후 연동 예정입니다')" style="color: var(--accent-primary); text-decoration: none; font-size: 14px;">모델 보기 →</a>
+              </div>
+              <div style="padding: 16px; background: var(--bg-tertiary); border-radius: var(--radius-md); border: 1px solid var(--border-primary);">
+                <h4 style="margin: 0 0 8px 0;">⚡ 자동화 워크플로우</h4>
+                <p style="margin: 0 0 12px 0; color: var(--text-secondary); font-size: 14px;">반복 작업 자동화 솔루션</p>
+                <a href="#" onclick="alert('향후 연동 예정입니다')" style="color: var(--accent-primary); text-decoration: none; font-size: 14px;">워크플로우 보기 →</a>
+              </div>
+              <div style="padding: 16px; background: var(--bg-tertiary); border-radius: var(--radius-md); border: 1px solid var(--border-primary);">
+                <h4 style="margin: 0 0 8px 0;">🎯 AI 분석 도구</h4>
+                <p style="margin: 0 0 12px 0; color: var(--text-secondary); font-size: 14px;">데이터 분석과 인사이트 도출</p>
+                <a href="#" onclick="alert('향후 연동 예정입니다')" style="color: var(--accent-primary); text-decoration: none; font-size: 14px;">도구 보기 →</a>
+              </div>
+              <div style="padding: 16px; background: var(--bg-tertiary); border-radius: var(--radius-md); border: 1px solid var(--border-primary);">
+                <h4 style="margin: 0 0 8px 0;">🔧 API 통합 솔루션</h4>
+                <p style="margin: 0 0 12px 0; color: var(--text-secondary); font-size: 14px;">외부 서비스와 AI 연동</p>
+                <a href="#" onclick="alert('향후 연동 예정입니다')" style="color: var(--accent-primary); text-decoration: none; font-size: 14px;">솔루션 보기 →</a>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
       // 앱 카드 생성 함수
       function createAppCard(app) {
         const card = document.createElement('div');
         card.className = 'app-card';
-        
+
         // comingSoon인 경우 클릭 방지
         if (app.comingSoon) {
           card.onclick = (e) => {
@@ -555,11 +756,16 @@
 
       // 앱 그리드 렌더링
       function renderApps() {
-        const grid = document.getElementById('apps-grid');
-        grid.innerHTML = '';
-        
-        apps.forEach(app => {
-          grid.appendChild(createAppCard(app));
+        // 첫 번째 섹션 렌더링
+        appGridSection1.innerHTML = '';
+        appsSection1.forEach(app => {
+          appGridSection1.appendChild(createAppCard(app));
+        });
+
+        // 두 번째 섹션 렌더링
+        appGridSection2.innerHTML = '';
+        appsSection2.forEach(app => {
+          appGridSection2.appendChild(createAppCard(app));
         });
       }
 
